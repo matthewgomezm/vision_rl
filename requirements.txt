@@ -7,3 +7,4 @@ brax
 distrax
 orbax-checkpoint
 wandb
+playground
