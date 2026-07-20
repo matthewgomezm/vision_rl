@@ -1,5 +1,6 @@
 jax[cuda12]
 mujoco
+mujoco-warp
 mujoco-mjx
 flax
 optax
