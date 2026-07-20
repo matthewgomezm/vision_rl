@@ -3,9 +3,7 @@
 """
 import jax
 import jax.numpy as jnp
-
 import flax.struct
-
 
 @flax.struct.dataclass
 class RewardConfig:
@@ -41,6 +39,7 @@ class RewardConfig:
     # Hyperparameter for exponential kernel:
     kernel_sigma: float = 0.25
 
+
 # noise for senses
 @flax.struct.dataclass
 class NoiseConfig:
@@ -66,12 +65,12 @@ class DisturbanceConfig:
 
 @flax.struct.dataclass
 class CommandConfig:
-    command_range: jax.Array = flax.struct.field(
+    command_range: jax.Array = flax.struct.field(        # max [vx, vy, wz]
         default_factory=lambda: jnp.array([1.5, 1.0, 1.2]),
     )
-    single_command_probability: float = 0.0
-    command_mask_probability: float = 0.9
-    command_frequency: list[float] = flax.struct.field(
+    single_command_probability: float = 0.0     # chance to isolate one axis
+    command_mask_probability: float = 0.9       # chance its a real command
+    command_frequency: list[float] = flax.struct.field(         # secs between commands
         default_factory=lambda: [1.0, 5.0],
     )
 
