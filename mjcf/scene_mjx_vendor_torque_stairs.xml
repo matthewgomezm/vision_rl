@@ -29,7 +29,7 @@
         <geom name="stair_10" type="box" pos="3.500 0 0.600" size="0.175 1.500 0.610" contype="2" conaffinity="2"/>
     </worldbody>
 
-    <include file="controllers/torque_control.xml"/>
+    <include file="controllers/position_control.xml"/>
     <include file="contacts/walking_task_contacts.xml"/>
     <include file="sensors/foot_to_floor_force_sensor.xml"/>
     <include file="sensors/torso_to_floor_collision_sensor.xml"/>
