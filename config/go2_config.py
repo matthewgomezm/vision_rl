@@ -95,7 +95,7 @@ class EnvironmentConfig:
     spawn_radius: float = 4.0
 
     # heightmap env config
-    heightmap_enabled: bool = False
+    heightmap_enabled: bool = True
     heightmap_rows: int = 11
     heightmap_cols: int = 7
     heightmap_spacing: float = 0.1

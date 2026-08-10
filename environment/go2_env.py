@@ -52,10 +52,6 @@ class UnitreeGo2Env(base.UnitreeGo2Env):
             **kwargs,
         )
 
-        # Precompute static heightfield data so reset() can spawn the robot at
-        # the correct height anywhere on the terrain. All values here are known
-        # at construction time (the terrain geometry never changes), so they
-        # bake into the jitted reset as constants.
         m = self._mj_model
         self._has_hfield = m.nhfield > 0
         if self._has_hfield:
@@ -74,6 +70,39 @@ class UnitreeGo2Env(base.UnitreeGo2Env):
             self._hf_center = jnp.asarray(m.geom_pos[self.floor_geom_idx])
         else:
             self._hf_center = jnp.zeros(3)
+
+        rows = self.environment_config.heightmap_rows
+        cols = self.environment_config.heightmap_cols
+        spacing = self.environment_config.heightmap_spacing
+        offsets_x = (jnp.arange(rows) - (rows - 1) / 2.0) * spacing
+        offsets_y = (jnp.arange(cols) - (cols - 1) / 2.0) * spacing
+        grid_x, grid_y = jnp.meshgrid(offsets_x, offsets_y, indexing='ij')
+        self._heightmap_offsets = jnp.stack(
+            [grid_x.ravel(), grid_y.ravel()], axis=-1,
+        )
+
+    def _heightmap(self, data: mjx.Data) -> jax.Array:
+        base_xy = data.qpos[0:2]
+        base_z = data.qpos[2]
+
+        w, x, y, z = data.qpos[3:7]
+        yaw = jnp.arctan2(
+            2.0 * (w * z + x * y), 1.0 - 2.0 * (y * y + z * z),
+        )
+        cos_yaw, sin_yaw = jnp.cos(yaw), jnp.sin(yaw)
+        rotation = jnp.array([
+            [cos_yaw, -sin_yaw],
+            [sin_yaw, cos_yaw],
+        ])
+        points = base_xy + self._heightmap_offsets @ rotation.T
+
+        if self._has_hfield:
+            terrain = jax.vmap(self._terrain_height)(points)
+        else:
+            terrain = jnp.zeros(points.shape[0])
+
+        clip = self.environment_config.heightmap_clip
+        return jnp.clip(terrain - base_z, -clip, clip)
 
     def _terrain_height(self, xy: jax.Array) -> jax.Array:
         """World-frame terrain surface height at (x, y). 0 if no heightfield.
@@ -140,10 +169,11 @@ class UnitreeGo2Env(base.UnitreeGo2Env):
             key, shape=(2,), minval=-spawn_radius, maxval=spawn_radius,
         )
         qpos = initial_qpos.at[0:2].set(xy)
-        # Raise the base by the terrain height at the new (x, y), relative to the
-        # terrain under the home pose, so foot clearance is preserved on bumps.
-        z_shift = self._terrain_height(xy) - self._terrain_height(initial_qpos[0:2])
-        qpos = qpos.at[2].set(initial_qpos[2] + z_shift)
+        # Raise the base by the terrain height at the new (x, y). The home
+        # keyframe's z is authored above a flat floor at world zero, so the
+        # terrain height adds directly; subtracting the height under the home
+        # xy would sink the robot whenever the origin sits on raised ground.
+        qpos = qpos.at[2].set(initial_qpos[2] + self._terrain_height(xy))
 
         # Yaw: Uniform [-pi, pi]
         rng, key = jax.random.split(rng)
@@ -475,6 +505,7 @@ class UnitreeGo2Env(base.UnitreeGo2Env):
                 motor_velocities,
                 previous_action,
                 command,
+                heightmap,  (rows*cols, only when heightmap_enabled)
             ]
         """
         q = data.qpos[7:]
@@ -522,14 +553,30 @@ class UnitreeGo2Env(base.UnitreeGo2Env):
         )
         noisy_joint_velocities = qd + joint_velocity_noise
 
-        observation = jnp.concatenate([
+        observation_terms = [
             noisy_angular_rate,                         # 3
             noisy_projected_gravity,                    # 3
             noisy_joint_positions - self.default_pose,  # 12
             noisy_joint_velocities,                     # 12
             state_info['previous_action'],              # 12 or 24
             state_info['command'],                      # 3
-        ])
+        ]
+
+        # Terrain patch appended last, so the blind layout above keeps its
+        # indices. The critic picks this up for free — privileged_observation
+        # is built on top of observation.
+        if self.environment_config.heightmap_enabled:
+            heightmap = self._heightmap(data)
+            state_info['rng'], noise_key = jax.random.split(state_info['rng'])
+            heightmap_noise = jax.random.uniform(
+                noise_key,
+                shape=heightmap.shape,
+                minval=-self.noise_config.heightmap,
+                maxval=self.noise_config.heightmap,
+            )
+            observation_terms.append(heightmap + heightmap_noise)  # rows*cols
+
+        observation = jnp.concatenate(observation_terms)
 
         accelerometer = self.get_accelerometer(data)
         linear_velocity = self.get_local_linear_velocity(data)
