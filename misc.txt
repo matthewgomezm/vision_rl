@@ -1,0 +1,36 @@
+generate scenes command (can change by editing -- flags):
+python -m mujoco_scenes.generate --freq-rough 2 --rough-amplitude 0.5 --output mjcf/assets patch_hfield.png
+
+A quick sanity run (minutes, to confirm reward climbs before committing to the long one):
+python -m train.train_ppo --num-timesteps 2000000 --num-envs 512
+
+A real run, logged to wandb, with a note to your future self:
+python -m train.train_ppo --wandb --notes "blind baseline, position_rough"
+
+Point it somewhere specific so you don't hunt for the timestamped folder later:
+python -m train.train_ppo --save-path policies/blind_v1 --wandb
+
+Train on different terrain:
+python -m train.train_ppo --scene scene_mjx_vendor_torque_stairs.xml
+
+The flags, in one place
+
+┌─────────────────┬─────────────────────────────────────┬─────────────────────────────────┐
+│      Flag       │               Default               │          What it does           │
+├─────────────────┼─────────────────────────────────────┼─────────────────────────────────┤
+│ --num-timesteps │ 200,000,000                         │ total training steps            │
+├─────────────────┼─────────────────────────────────────┼─────────────────────────────────┤
+│ --num-envs      │ 2048                                │ robots simulated in parallel    │
+├─────────────────┼─────────────────────────────────────┼─────────────────────────────────┤
+│ --scene         │ scene_mjx_vendor_position_rough.xml │ which world                     │
+├─────────────────┼─────────────────────────────────────┼─────────────────────────────────┤
+│ --save-path     │ policies/<timestamp>                │ where the policy lands          │
+├─────────────────┼─────────────────────────────────────┼─────────────────────────────────┤
+│ --wandb         │ off                                 │ log metrics to Weights & Biases │
+├─────────────────┼─────────────────────────────────────┼─────────────────────────────────┤
+│ --notes         │ ""                                  │ free-text tag for the wandb run
+
+
+
+python -m train.train --num-envs 2048 --notes "blind baseline"
+python -m testing.play_policy --policy policies/20260716-142821
