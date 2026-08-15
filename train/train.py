@@ -34,15 +34,9 @@ WANDB_PROJECT = "unitree-go2-vision-rl"
 
 
 def _to_loggable(config) -> dict:
-    """Full, JSON-friendly state dict of a flax config dataclass.
-
-    Unlike env.reward_config (which strips the reward hyperparameters), this
-    keeps every field so tuning e.g. target_foot_height / target_air_time is
-    recorded in the run. Arrays (e.g. command_range) are converted to lists.
-    """
     state = flax.serialization.to_state_dict(config)
     return jax.tree_util.tree_map(
-        lambda x: np.asarray(x).tolist() if hasattr(x, 'shape') else x,
+        lambda x: np.asarray(x).tolist() if hasattr(x, "shape") else x,
         state,
     )
 
@@ -126,14 +120,14 @@ def main():
         name=Path(save_path).name,
         notes=args.notes,
         config={
-            'ppo_params': params,
-            'reward_config': _to_loggable(reward_config),
-            'noise_config': _to_loggable(noise_config),
-            'disturbance_config': _to_loggable(disturbance_config),
-            'command_config': _to_loggable(command_config),
-            'env_config': _to_loggable(environment_config),
-            'scene': args.scene,
-            'save_path': save_path,
+            "ppo_params": params,
+            "reward_config": _to_loggable(reward_config),
+            "noise_config": _to_loggable(noise_config),
+            "disturbance_config": _to_loggable(disturbance_config),
+            "command_config": _to_loggable(command_config),
+            "env_config": _to_loggable(environment_config),
+            "scene": args.scene,
+            "save_path": save_path,
         },
     ) as run:
         train_fn = functools.partial(

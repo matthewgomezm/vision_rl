@@ -13,7 +13,7 @@ class RewardConfig:
     tracking_linear_velocity: float = 1.5
     tracking_angular_velocity: float = 0.75
     # Orientation Regularization Terms:
-    orientation_regularization: float = -2.5
+    orientation_regularization: float = -0.95
     linear_z_velocity: float = -0.5
     angular_xy_velocity: float = -0.05
     # Energy Regularization Terms:
@@ -83,7 +83,7 @@ class CommandConfig:
 @flax.struct.dataclass
 class EnvironmentConfig:
     filename: str = "scene_mjx_vendor_torque_steps.xml"
-    impl: str = "jax" # warp instead of jax unless need to use jax backend
+    impl: str = "warp"
     action_scale: float = 0.5
     control_timestep: float = 0.02
     optimizer_timestep: float = 0.004
@@ -98,7 +98,7 @@ class EnvironmentConfig:
     spawn_radius: float = 4.0
 
     # heightmap env config
-    heightmap_enabled: bool = True  
+    heightmap_enabled: bool = True
     heightmap_rows: int = 11
     heightmap_cols: int = 7
     heightmap_spacing: float = 0.1
