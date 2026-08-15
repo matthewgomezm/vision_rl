@@ -14,7 +14,7 @@ class RewardConfig:
     tracking_angular_velocity: float = 0.75
     # Orientation Regularization Terms:
     orientation_regularization: float = -2.5
-    linear_z_velocity: float = -2.0
+    linear_z_velocity: float = -0.5
     angular_xy_velocity: float = -0.05
     # Energy Regularization Terms:
     torque: float = -2e-4
@@ -95,7 +95,7 @@ class EnvironmentConfig:
     spawn_radius: float = 4.0
 
     # heightmap env config
-    heightmap_enabled: bool = False
+    heightmap_enabled: bool = True
     heightmap_rows: int = 11
     heightmap_cols: int = 7
     heightmap_spacing: float = 0.1
