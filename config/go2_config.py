@@ -83,19 +83,22 @@ class CommandConfig:
 @flax.struct.dataclass
 class EnvironmentConfig:
     filename: str = "scene_mjx_vendor_torque_steps.xml"
-    impl: str = "warp"
+    impl: str = "jax" # warp instead of jax unless need to use jax backend
     action_scale: float = 0.5
     control_timestep: float = 0.02
     optimizer_timestep: float = 0.004
     naconmax: int = 8 * 8192
-    njmax: int = 12 + 48
+    # Max constraint rows per world. Flat ground fit in 60, but stepped/rough
+    # hfield produces more simultaneous foot contacts and overflowed (~73),
+    # dropping contacts. Headroom above peak; dynamic parkour contact needs it.
+    njmax: int = 128
     # Half-width (m) of the box the robot spawns in, centered on the terrain.
     # Widen this to sample more of the rough field per episode. The hfield is
     # +/-10 m, so 4.0 leaves a 6 m margin before the edge.
     spawn_radius: float = 4.0
 
     # heightmap env config
-    heightmap_enabled: bool = True
+    heightmap_enabled: bool = True  
     heightmap_rows: int = 11
     heightmap_cols: int = 7
     heightmap_spacing: float = 0.1

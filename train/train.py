@@ -10,6 +10,8 @@ from datetime import datetime
 from pathlib import Path
 
 import jax
+import numpy as np
+import flax.serialization
 import wandb
 
 from brax.io import model
@@ -18,11 +20,31 @@ from brax.training.agents.ppo import train as ppo
 
 from mujoco_playground import wrapper
 
-from config.go2_config import EnvironmentConfig
+from config.go2_config import (
+    EnvironmentConfig,
+    RewardConfig,
+    NoiseConfig,
+    DisturbanceConfig,
+    CommandConfig,
+)
 from environment.go2_env import UnitreeGo2Env
 
 # Change this to log runs under a different Weights & Biases project.
 WANDB_PROJECT = "unitree-go2-vision-rl"
+
+
+def _to_loggable(config) -> dict:
+    """Full, JSON-friendly state dict of a flax config dataclass.
+
+    Unlike env.reward_config (which strips the reward hyperparameters), this
+    keeps every field so tuning e.g. target_foot_height / target_air_time is
+    recorded in the run. Arrays (e.g. command_range) are converted to lists.
+    """
+    state = flax.serialization.to_state_dict(config)
+    return jax.tree_util.tree_map(
+        lambda x: np.asarray(x).tolist() if hasattr(x, 'shape') else x,
+        state,
+    )
 
 
 def ppo_params(num_timesteps: int, num_envs: int) -> dict:
@@ -69,8 +91,18 @@ def main():
     save_path = args.save_path or f"policies/{datetime.now():%Y%m%d-%H%M%S}"
     Path(save_path).parent.mkdir(parents=True, exist_ok=True)
 
+    environment_config = EnvironmentConfig(filename=args.scene)
+    reward_config = RewardConfig()
+    noise_config = NoiseConfig()
+    disturbance_config = DisturbanceConfig()
+    command_config = CommandConfig()
+
     env = UnitreeGo2Env(
-        environment_config=EnvironmentConfig(filename=args.scene),
+        environment_config=environment_config,
+        reward_config=reward_config,
+        noise_config=noise_config,
+        disturbance_config=disturbance_config,
+        command_config=command_config,
     )
 
     params = ppo_params(args.num_timesteps, args.num_envs)
@@ -94,12 +126,14 @@ def main():
         name=Path(save_path).name,
         notes=args.notes,
         config={
-            "ppo_params": params,
-            "reward_config": env.reward_config,
-            "command_config": env.command_config,
-            "env_config": env.environment_config,
-            "scene": args.scene,
-            "save_path": save_path,
+            'ppo_params': params,
+            'reward_config': _to_loggable(reward_config),
+            'noise_config': _to_loggable(noise_config),
+            'disturbance_config': _to_loggable(disturbance_config),
+            'command_config': _to_loggable(command_config),
+            'env_config': _to_loggable(environment_config),
+            'scene': args.scene,
+            'save_path': save_path,
         },
     ) as run:
         train_fn = functools.partial(
