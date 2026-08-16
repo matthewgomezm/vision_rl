@@ -193,7 +193,7 @@ class UnitreeGo2Env(mjx_env.MjxEnv):
             "left_torso_to_floor",
             "right_torso_to_floor",
         ]
-        termination_sensor_names.extend(unwanted_contact_sensor_names)
+        # termination_sensor_names.extend(unwanted_contact_sensor_names)    testing if removing calf contact helps climb behaviors
         self.termination_contact_sensor = [
             self._mj_model.sensor(f'{termination_sensor_name}').id
             for termination_sensor_name in termination_sensor_names
