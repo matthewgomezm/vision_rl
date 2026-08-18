@@ -487,8 +487,8 @@ class UnitreeGo2Env(base.UnitreeGo2Env):
         ])
 
         done = self.get_upvector(data)[-1] < -0.25
-        done |= jnp.any(joint_angles < self.joint_lb)
-        done |= jnp.any(joint_angles > self.joint_ub)
+        done |= jnp.any(joint_angles < self.joint_lb)   # joint lower limits; if joint angles less
+        done |= jnp.any(joint_angles > self.joint_ub)   # joint upper limits; if joint angles greater 
         done |= jnp.any(termination_contacts)
         return done
 
