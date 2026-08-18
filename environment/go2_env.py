@@ -81,6 +81,8 @@ class UnitreeGo2Env(base.UnitreeGo2Env):
             [grid_x.ravel(), grid_y.ravel()], axis=-1,
         )
 
+        self._raycast_bodyexclude = list(range(1, self._mj_model.nbody))
+
     def _heightmap(self, data: mjx.Data) -> jax.Array:
         base_xy = data.qpos[0:2]
         base_z = data.qpos[2]
@@ -96,10 +98,7 @@ class UnitreeGo2Env(base.UnitreeGo2Env):
         ])
         points = base_xy + self._heightmap_offsets @ rotation.T
 
-        if self._has_hfield:
-            terrain = jax.vmap(self._terrain_height)(points)
-        else:
-            terrain = jnp.zeros(points.shape[0])
+        terrain = jax.vmap(lambda p: self._raycast_height(data, p))(points)
 
         clip = self.environment_config.heightmap_clip
         return jnp.clip(terrain - base_z, -clip, clip)
@@ -119,6 +118,24 @@ class UnitreeGo2Env(base.UnitreeGo2Env):
         col = jnp.round(jnp.clip(u, 0.0, 1.0) * (self._hf_ncol - 1)).astype(jnp.int32)
         row = jnp.round(jnp.clip(v, 0.0, 1.0) * (self._hf_nrow - 1)).astype(jnp.int32)
         return self._hf_center[2] + self._hf_data[row, col] * self._hf_elevation
+
+    def _raycast_height(self, data: mjx.Data, xy: jax.Array) -> jax.Array:
+        origin = jnp.array([
+            xy[0],
+            xy[1],
+            data.qpos[2] + self.environment_config.ray_origin_margin,
+        ])
+        direction = jnp.array([0.0, 0.0, -1.0])
+        dist, _ = mjx.ray(
+            self._mjx_model,
+            data,
+            origin,
+            direction,
+            bodyexclude=self._raycast_bodyexclude,
+        )
+        hit_z = origin[2] - dist
+        fallback = data.qpos[2] - self.environment_config.heightmap_clip
+        return jnp.where(dist < 0.0, fallback, hit_z)
 
     def sample_command(
         self,

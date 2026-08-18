@@ -83,7 +83,7 @@ class CommandConfig:
 @flax.struct.dataclass
 class EnvironmentConfig:
     filename: str = "scene_mjx_vendor_torque_steps.xml"
-    impl: str = "warp"
+    impl: str = "jax"
     action_scale: float = 0.5
     control_timestep: float = 0.02
     optimizer_timestep: float = 0.004
@@ -103,3 +103,4 @@ class EnvironmentConfig:
     heightmap_cols: int = 7
     heightmap_spacing: float = 0.1
     heightmap_clip: float = 0.5
+    ray_origin_margin: float = 1.0
