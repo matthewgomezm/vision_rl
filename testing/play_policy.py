@@ -22,7 +22,6 @@ from brax.training.agents.ppo import networks as ppo_networks
 from config.go2_config import EnvironmentConfig
 from environment.go2_env import UnitreeGo2Env
 
-# Per-keypress increments and clamps for [vx, vy, wz]. Ranges mirror CommandConfig.
 CMD_STEP = jnp.array([0.25, 0.25, 0.25])
 CMD_MAX = jnp.array([1.5, 1.0, 1.2])
 
@@ -47,6 +46,21 @@ def load_policy(policy_path: str, env: UnitreeGo2Env):
     return jax.jit(inference_fn)
 
 
+# strictly for rendering purposes only
+# can be commented out
+def draw_heightmap(scn, points):
+    scn.ngeom = len(points)
+    for i, p in enumerate(points):
+        mujoco.mjv_initGeom(
+            scn.geoms[i],
+            mujoco.mjtGeom.mjGEOM_SPHERE,
+            np.array([0.02, 0.02, 0.02]),
+            np.asarray(p, dtype=np.float64),
+            np.eye(3).ravel(),
+            np.array([1.0, 0.0, 0.0, 0.7], dtype=np.float32),
+        )
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--policy', type=str, required=True,
@@ -63,7 +77,6 @@ def main():
     rng = jax.random.PRNGKey(0)
     state = jit_reset(rng)
 
-    # Keyboard command, mutated by the callback and read each frame.
     command = {'value': jnp.zeros(3), 'reset': False}
 
     def key_callback(keycode):
@@ -92,6 +105,7 @@ def main():
     mj_model = env.mj_model
     mj_data = mujoco.MjData(mj_model)
     dt = env.dt
+    jit_heightmap_points = jax.jit(env._heightmap_points)
 
     with mujoco.viewer.launch_passive(
         mj_model, mj_data, key_callback=key_callback
@@ -106,7 +120,6 @@ def main():
                 state = jit_reset(sub)
                 command['reset'] = False
 
-            # Pin our keyboard command into the env so step() won't resample it.
             state.info['command'] = command['value']
             state.info['steps_until_next_command'] = jnp.int32(1_000_000)
 
@@ -118,6 +131,7 @@ def main():
             mj_data.qpos[:] = np.asarray(state.data.qpos)
             mj_data.qvel[:] = np.asarray(state.data.qvel)
             mujoco.mj_forward(mj_model, mj_data)
+            draw_heightmap(viewer.user_scn, np.asarray(jit_heightmap_points(state.data)))
             viewer.sync()
 
             cmd = tuple(round(float(c), 2) for c in command['value'])
@@ -125,7 +139,6 @@ def main():
                 print(f'command [vx, vy, wz] = {cmd}')
                 last_cmd = cmd
 
-            # Real-time pacing (50 Hz control).
             wait = dt - (time.time() - step_start)
             if wait > 0:
                 time.sleep(wait)

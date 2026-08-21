@@ -28,6 +28,7 @@ from config.go2_config import (
     CommandConfig,
 )
 from environment.go2_env import UnitreeGo2Env
+from environment.terrain import make_terrain_randomizer
 
 # Change this to log runs under a different Weights & Biases project.
 WANDB_PROJECT = "unitree-go2-vision-rl"
@@ -99,6 +100,15 @@ def main():
         command_config=command_config,
     )
 
+    num_tiles = sum(
+        1 for i in range(env.mj_model.ngeom)
+        if (env.mj_model.geom(i).name or '').startswith('tile_')
+    )
+    randomization_fn = None
+    if num_tiles > 0:
+        randomization_fn = make_terrain_randomizer(env.mj_model, num_tiles)
+        print(f'per-env terrain randomization: {num_tiles} tiles')
+
     params = ppo_params(args.num_timesteps, args.num_envs)
 
     network_factory = functools.partial(
@@ -134,6 +144,7 @@ def main():
             ppo.train,
             **params,
             network_factory=network_factory,
+            randomization_fn=randomization_fn,      # new randomization func
             progress_fn=make_progress_fn(run),
             seed=0,
         )

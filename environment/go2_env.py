@@ -83,9 +83,8 @@ class UnitreeGo2Env(base.UnitreeGo2Env):
 
         self._raycast_bodyexclude = list(range(1, self._mj_model.nbody))
 
-    def _heightmap(self, data: mjx.Data) -> jax.Array:
+    def _heightmap_points(self, data: mjx.Data) -> jax.Array:
         base_xy = data.qpos[0:2]
-        base_z = data.qpos[2]
 
         w, x, y, z = data.qpos[3:7]
         yaw = jnp.arctan2(
@@ -98,10 +97,14 @@ class UnitreeGo2Env(base.UnitreeGo2Env):
         ])
         points = base_xy + self._heightmap_offsets @ rotation.T
 
-        terrain = jax.vmap(lambda p: self._raycast_height(data, p))(points)
+        heights = jax.vmap(lambda p: self._raycast_height(data, p))(points)
+        return jnp.concatenate([points, heights[:, None]], axis=-1)
 
+    def _heightmap(self, data: mjx.Data) -> jax.Array:
+        points = self._heightmap_points(data)
+        base_z = data.qpos[2]
         clip = self.environment_config.heightmap_clip
-        return jnp.clip(terrain - base_z, -clip, clip)
+        return jnp.clip(points[:, 2] - base_z, -clip, clip)
 
     def _terrain_height(self, xy: jax.Array) -> jax.Array:
         """World-frame terrain surface height at (x, y). 0 if no heightfield.
@@ -190,7 +193,10 @@ class UnitreeGo2Env(base.UnitreeGo2Env):
         # keyframe's z is authored above a flat floor at world zero, so the
         # terrain height adds directly; subtracting the height under the home
         # xy would sink the robot whenever the origin sits on raised ground.
-        qpos = qpos.at[2].set(initial_qpos[2] + self._terrain_height(xy))
+        qpos = qpos.at[2].set(
+            initial_qpos[2] + self._terrain_height(xy)
+            + self.environment_config.spawn_clearance
+        )
 
         # Yaw: Uniform [-pi, pi]
         rng, key = jax.random.split(rng)

@@ -1,0 +1,58 @@
+<mujoco model="go2-mjx scene">
+    <include file="models/go2_mjx_full_collision_vendor_test_raycast.xml"/>
+
+    <statistic center="0 0 0.1" extent="0.8"/>
+
+    <visual>
+      <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
+      <rgba haze="0.15 0.25 0.35 1"/>
+      <global azimuth="120" elevation="-20"/>
+    </visual>
+
+    <asset>
+        <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+        <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
+            markrgb="0.8 0.8 0.8" width="300" height="300"/>
+        <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+    </asset>
+
+    <worldbody>
+        <light pos="0 0 1.5" dir="0 0 -1" directional="true"/>
+        <camera name="default" pos="0.846 -1.465 0.916" xyaxes="0.866 0.500 0.000 -0.171 0.296 0.940"/>
+        <geom name="floor" size="0 0 0.05" type="plane" material="groundplane"/>
+        <geom name="test_box" type="box" size="0.4 0.4 0.15" pos="1.5 0 0.15" rgba="0.8 0.3 0.3 1"/>
+    </worldbody>
+
+    <contact>
+        <pair name="fr_foot_box" geom1="front_right_foot_collision" geom2="test_box" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="fl_foot_box" geom1="front_left_foot_collision" geom2="test_box" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="hr_foot_box" geom1="hind_right_foot_collision" geom2="test_box" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="hl_foot_box" geom1="hind_left_foot_collision" geom2="test_box" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="lt_torso_box" geom1="left_torso_collision" geom2="test_box" condim="1" friction="0.8"/>
+        <pair name="rt_torso_box" geom1="right_torso_collision" geom2="test_box" condim="1" friction="0.8"/>
+        <pair name="frcu_box" geom1="front_right_calf_upper_collision" geom2="test_box" condim="1" friction="0.8"/>
+        <pair name="frcl_box" geom1="front_right_calf_lower_collision" geom2="test_box" condim="1" friction="0.8"/>
+        <pair name="flcu_box" geom1="front_left_calf_upper_collision" geom2="test_box" condim="1" friction="0.8"/>
+        <pair name="flcl_box" geom1="front_left_calf_lower_collision" geom2="test_box" condim="1" friction="0.8"/>
+        <pair name="hrcu_box" geom1="hind_right_calf_upper_collision" geom2="test_box" condim="1" friction="0.8"/>
+        <pair name="hrcl_box" geom1="hind_right_calf_lower_collision" geom2="test_box" condim="1" friction="0.8"/>
+        <pair name="hlcu_box" geom1="hind_left_calf_upper_collision" geom2="test_box" condim="1" friction="0.8"/>
+        <pair name="hlcl_box" geom1="hind_left_calf_lower_collision" geom2="test_box" condim="1" friction="0.8"/>
+    </contact>
+
+    <!-- Control Type -->
+    <include file="controllers/position_control.xml"/>
+
+    <!-- Add Task Specific Contacts -->
+    <include file="contacts/walking_task_contacts.xml"/>
+
+    <!-- Add Task Specific Sensors -->
+    <include file="sensors/foot_to_floor_force_sensor.xml"/>
+    <include file="sensors/torso_to_floor_collision_sensor.xml"/>
+    <include file="sensors/foot_to_floor_collision_sensor.xml"/>
+    <include file="sensors/front_calf_to_floor_collision_sensor.xml"/>
+    <include file="sensors/hind_calf_to_floor_collision_sensor.xml"/>
+    <!--include file="sensors/cam_sensors.xml"-->
+    
+
+</mujoco>
