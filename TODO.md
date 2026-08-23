@@ -2,3 +2,5 @@
 - [ ] Build scenes for raycasting
 - [ ] Complete baseline trainings for raycasting
 - [ ] Goal position reward? Velocity towards goal position? To think about.
+- [ ] Dockerfile for cloud training in case OOM problems appear. Does not have to be now though
+- [ ] 
