@@ -395,6 +395,8 @@ class UnitreeGo2Env(base.UnitreeGo2Env):
             ]
         )
 
+        first_contact = feet_contacts & ~state.info["previous_contact"] 
+
         # Feet Air and Contact Time:
         state.info["previous_air_time"] = jnp.where(
             feet_contacts,
@@ -441,7 +443,10 @@ class UnitreeGo2Env(base.UnitreeGo2Env):
                     state.info["command"], local_body_velocity
                 )
             ),
-            "tracking_angular_velocity": (
+            "body_height": self._cost_body_height
+            (
+                data
+            ),            "tracking_angular_velocity": (
                 self._reward_tracking_yaw_rate(
                     state.info["command"], self.get_gyro(data)
                 )
@@ -472,13 +477,15 @@ class UnitreeGo2Env(base.UnitreeGo2Env):
                 state.info["command"],
             ),
             "air_time": self._reward_air_time(
-                state.info["feet_air_time"],
-                state.info["feet_contact_time"],
+                state.info["previous_air_time"],
+                first_contact,
+                #state.info["feet_air_time"],
+                #state.info["feet_contact_time"],
                 state.info["command"],
-                global_body_velocity,
-                self.mode_time,
-                self.command_threshold,
-                self.velocity_threshold,
+                #global_body_velocity,
+                #self.mode_time,
+                #self.command_threshold,
+                #self.velocity_threshold,
             ),
             "gait_variance": self._cost_gait_variance(
                 state.info["previous_air_time"],
@@ -760,44 +767,59 @@ class UnitreeGo2Env(base.UnitreeGo2Env):
         command_norm = jnp.linalg.norm(commands)
         return jnp.sum(jnp.abs(joint_angles - self.default_pose)) * (command_norm < 0.1)
 
-    # def _reward_air_time(
-    #     self,
-    #     air_time: jax.Array,
-    #     first_contact: jax.Array,
-    #     commands: jax.Array,
-    # ) -> jax.Array:
-    #     # Flight Phase Reward:
-    #     command_norm = jnp.linalg.norm(commands)
-    #     reward_air_time = jnp.sum((air_time - self.target_air_time) * first_contact)
-    #     reward_air_time *= (
-    #         command_norm > 0.1
-    #     )
-    #     return reward_air_time
+    # new penalty penalziing deviation from target body height    
+    def _cost_body_height(
+        self,
+        data: mjx.Data,
+    ) -> jax.Array:
+        base_xy = data.qpos[0:2]
+        base_z = data.qpos[2]
+        if self._has_hfield:
+            ground = self._terrain_height(base_xy)
+        else:
+            ground = self._raycast_height(data, base_xy)
+        height_above_ground = base_z - ground
+        return jnp.square(height_above_ground - self.target_body_height) 
+    
 
     def _reward_air_time(
-        self,
-        air_time: jax.Array,
-        contact_time: jax.Array,
-        commands: jax.Array,
-        body_velocity: jax.Array,
-        mode_time: float = 0.3,
-        command_threshold: float = 0.0,
-        velocity_threshold: float = 0.5,
-    ) -> jax.Array:
+         self,
+         air_time: jax.Array,
+         first_contact: jax.Array,
+         commands: jax.Array,
+     ) -> jax.Array:
+         # Flight Phase Reward:
+         command_norm = jnp.linalg.norm(commands)
+         reward_air_time = jnp.sum((air_time - self.target_air_time) * first_contact)
+         reward_air_time *= (
+             command_norm > 0.1
+         )
+         return reward_air_time
+
+    # def _reward_air_time(
+    #    self,
+    #    air_time: jax.Array,
+    #    contact_time: jax.Array,
+    #    commands: jax.Array,
+    #    body_velocity: jax.Array,
+    #    mode_time: float = 0.3,
+    #    command_threshold: float = 0.0,
+    #    velocity_threshold: float = 0.5,
+    #) -> jax.Array:
         # Calculate Mode Timing Reward
-        t_max = jnp.maximum(air_time, contact_time)
-        t_min = jnp.clip(t_max, max=mode_time)
-        stance_reward = jnp.clip(contact_time - air_time, -mode_time, mode_time)
-        # Command and Body Velocity:
-        command_norm = jnp.linalg.norm(commands)
-        velocity_norm = jnp.linalg.norm(body_velocity)
-        # Reward:
-        reward = jnp.where(
-            (command_norm > command_threshold) | (velocity_norm > velocity_threshold),
-            jnp.where(t_max < mode_time, t_min, 0.0),
-            stance_reward,
-        )
-        return jnp.sum(reward)
+    #    t_max = jnp.maximum(air_time, contact_time)
+    #    t_min = jnp.clip(t_max, max=mode_time)
+    #    stance_reward = jnp.clip(contact_time - air_time, -mode_time, mode_time)
+    #    # Command and Body Velocity:
+    #    command_norm = jnp.linalg.norm(commands)
+    #    velocity_norm = jnp.linalg.norm(body_velocity)
+    #   # Reward:
+    #   reward = jnp.where(
+    #        (command_norm > command_threshold) | (velocity_norm > velocity_threshold),
+    #        jnp.where(t_max < mode_time, t_min, 0.0),
+    #        stance_reward,
+    #    )
+    #    return jnp.sum(reward)
 
     def _cost_gait_variance(
         self,

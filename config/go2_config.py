@@ -31,6 +31,8 @@ class RewardConfig:
     gait_variance: float = -0.5
     # Gait Hyperparameters:
     target_air_time: float = 0.65
+    body_height: float = -1.0
+    target_body_height: float = 0.30    
     mode_time: float = 0.3
     command_threshold: float = 0.0
     velocity_threshold: float = 0.5
