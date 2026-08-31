@@ -198,17 +198,32 @@ class UnitreeGo2Env(base.UnitreeGo2Env):
         initial_qvel = self.home_qvel
         rotation_axis = jnp.array([0, 0, 1])
 
-        # Initial Position: spawn anywhere on the terrain so each episode lands
-        # on different bumps. The blind policy must generalize across the rough
-        # field, not memorize one patch under a fixed start.
+      
+        rng, directed_key = jax.random.split(rng)
+        directed = jax.random.bernoulli(
+            directed_key, p=self.environment_config.directed_spawn_prob
+        )
+
         rng, key = jax.random.split(rng)
         spawn_radius = self.environment_config.spawn_radius
-        xy = self._hf_center[0:2] + jax.random.uniform(
+        random_xy = self._hf_center[0:2] + jax.random.uniform(
             key,
             shape=(2,),
             minval=-spawn_radius,
             maxval=spawn_radius,
         )
+        rng, base_key, lateral_key = jax.random.split(rng, 3)
+        directed_xy = jnp.array([
+            self.environment_config.spawn_base_x
+            + jax.random.uniform(base_key, minval=-0.2, maxval=0.2),
+            self._hf_center[1]
+            + jax.random.uniform(
+                lateral_key,
+                minval=-self.environment_config.spawn_lateral,
+                maxval=self.environment_config.spawn_lateral,
+            ),
+        ])
+        xy = jnp.where(directed, directed_xy, random_xy)
         qpos = initial_qpos.at[0:2].set(xy)
         # Raise the base by the terrain height at the new (x, y). The home
         # keyframe's z is authored above a flat floor at world zero, so the
@@ -220,9 +235,12 @@ class UnitreeGo2Env(base.UnitreeGo2Env):
             + self.environment_config.spawn_clearance
         )
 
-        # Yaw: Uniform [-pi, pi]
-        rng, key = jax.random.split(rng)
-        yaw = jax.random.uniform(key, (1,), minval=-jnp.pi, maxval=jnp.pi)
+        rng, key, directed_yaw_key = jax.random.split(rng, 3)
+        random_yaw = jax.random.uniform(key, (1,), minval=-jnp.pi, maxval=jnp.pi)
+        directed_yaw = jax.random.uniform(
+            directed_yaw_key, (1,), minval=-0.2, maxval=0.2
+        )
+        yaw = jnp.where(directed, directed_yaw, random_yaw)
         rotation = mjx_math.axis_angle_to_quat(rotation_axis, yaw)
         quaternion = mjx_math.quat_mul(initial_qpos[3:7], rotation)
         qpos = qpos.at[3:7].set(quaternion)
@@ -301,7 +319,12 @@ class UnitreeGo2Env(base.UnitreeGo2Env):
         steps_until_next_command = jnp.round(
             seconds_until_next_command / self.dt
         ).astype(jnp.int32)
-        command = self.sample_command(command_sample_key)
+        forward_command = jnp.array(
+            [self.environment_config.directed_command_vx, 0.0, 0.0]
+        )
+        command = jnp.where(
+            directed, forward_command, self.sample_command(command_sample_key)
+        )
 
         # Foot Contacts:
         feet_contacts = jnp.array(
@@ -317,6 +340,7 @@ class UnitreeGo2Env(base.UnitreeGo2Env):
             "previous_joint_positions": jnp.zeros(self.num_joints),
             "previous_velocity": jnp.zeros(self.num_joints),
             "command": command,
+            "directed": jnp.float32(directed),
             "steps_until_next_command": steps_until_next_command,
             "previous_contact": feet_contacts,
             "feet_air_time": jnp.zeros(4),
@@ -518,9 +542,17 @@ class UnitreeGo2Env(base.UnitreeGo2Env):
         state.info["rng"] = rng
 
         # Command Sampling:
+        forward_command = jnp.array(
+            [self.environment_config.directed_command_vx, 0.0, 0.0]
+        )
+        resampled_command = jnp.where(
+            state.info["directed"] > 0.5,
+            forward_command,
+            self.sample_command(cmd_key),
+        )
         state.info["command"] = jnp.where(
             state.info["steps_until_next_command"] <= 0,
-            self.sample_command(cmd_key),
+            resampled_command,
             state.info["command"],
         )
 

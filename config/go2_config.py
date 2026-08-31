@@ -107,3 +107,7 @@ class EnvironmentConfig:
     heightmap_clip: float = 0.5
     ray_origin_margin: float = 1.0
     spawn_clearance: float = 0.0
+    directed_spawn_prob: float = 0.0
+    spawn_base_x: float = -1.8
+    spawn_lateral: float = 1.2
+    directed_command_vx: float = 1.0

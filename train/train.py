@@ -129,8 +129,6 @@ def main():
                 env.mj_model, num_tiles, max_top=args.max_top
             )
             print(f'per-env terrain randomization: {num_tiles} tiles, max_top={args.max_top}')
-        randomization_fn = make_terrain_randomizer(env.mj_model, num_tiles)
-        print(f"per-env terrain randomization: {num_tiles} tiles")
 
     params = ppo_params(args.num_timesteps, args.num_envs)
 
