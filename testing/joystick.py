@@ -5,6 +5,9 @@ os.environ['XLA_FLAGS'] = (
     '--xla_gpu_enable_latency_hiding_scheduler=true '
 )
 
+os.environ['SDL_VIDEODRIVER'] = 'dummy' 
+
+
 import argparse
 import functools
 import time
@@ -14,6 +17,7 @@ import jax.numpy as jnp
 import numpy as np
 import mujoco
 import mujoco.viewer
+import pygame
 
 from brax.io import model
 from brax.training.acme import running_statistics
@@ -23,8 +27,12 @@ from config.go2_config import EnvironmentConfig
 from environment.go2_env import UnitreeGo2Env
 from environment.terrain import apply_random_terrain
 
-CMD_STEP = jnp.array([0.25, 0.25, 0.25])
 CMD_MAX = jnp.array([1.5, 1.0, 1.2])
+AXIS_FORWARD = 1          # left stick vertical    -> vx
+AXIS_LATERAL = 0          # left stick horizontal  -> vy
+AXIS_YAW = 2              # right stick horizontal -> wz
+GAMEPAD_DEADZONE = 0.1    # ignore small stick drift
+BUTTON_RESET = 9          
 
 
 def load_policy(policy_path: str, env: UnitreeGo2Env):
@@ -47,8 +55,6 @@ def load_policy(policy_path: str, env: UnitreeGo2Env):
     return jax.jit(inference_fn)
 
 
-# strictly for rendering purposes only
-# can be commented out
 def draw_heightmap(scn, points):
     scn.ngeom = len(points)
     for i, p in enumerate(points):
@@ -83,30 +89,56 @@ def main():
     rng = jax.random.PRNGKey(0)
     state = jit_reset(rng)
 
+    # Shared command holder, read each frame and pinned into the env.
     command = {'value': jnp.zeros(3), 'reset': False}
 
-    def key_callback(keycode):
-        key = chr(keycode) if 0 < keycode < 0x110000 else ''
-        delta = jnp.zeros(3)
-        if key == 'W':
-            delta = jnp.array([CMD_STEP[0], 0.0, 0.0])
-        elif key == 'S':
-            delta = jnp.array([-CMD_STEP[0], 0.0, 0.0])
-        elif key == 'Q':
-            delta = jnp.array([0.0, CMD_STEP[1], 0.0])
-        elif key == 'E':
-            delta = jnp.array([0.0, -CMD_STEP[1], 0.0])
-        elif key == 'A':
-            delta = jnp.array([0.0, 0.0, CMD_STEP[2]])
-        elif key == 'D':
-            delta = jnp.array([0.0, 0.0, -CMD_STEP[2]])
-        elif keycode == 32:  # space
-            command['value'] = jnp.zeros(3)
-            return
-        elif key == 'R':
+    # --- OLD KEYBOARD CONTROL (kept for reference; replaced by gamepad below) ---
+    # def key_callback(keycode):
+    #     key = chr(keycode) if 0 < keycode < 0x110000 else ''
+    #     delta = jnp.zeros(3)
+    #     if key == 'W':
+    #         delta = jnp.array([CMD_STEP[0], 0.0, 0.0])
+    #     elif key == 'S':
+    #         delta = jnp.array([-CMD_STEP[0], 0.0, 0.0])
+    #     elif key == 'Q':
+    #         delta = jnp.array([0.0, CMD_STEP[1], 0.0])
+    #     elif key == 'E':
+    #         delta = jnp.array([0.0, -CMD_STEP[1], 0.0])
+    #     elif key == 'A':
+    #         delta = jnp.array([0.0, 0.0, CMD_STEP[2]])
+    #     elif key == 'D':
+    #         delta = jnp.array([0.0, 0.0, -CMD_STEP[2]])
+    #     elif keycode == 32:  # space
+    #         command['value'] = jnp.zeros(3)
+    #         return
+    #     elif key == 'R':
+    #         command['reset'] = True
+    #         return
+    #     command['value'] = jnp.clip(command['value'] + delta, -CMD_MAX, CMD_MAX)
+
+    pygame.init()
+    pygame.joystick.init()
+    joystick = None
+    if pygame.joystick.get_count() > 0:
+        joystick = pygame.joystick.Joystick(0)
+        joystick.init()
+        print(f'gamepad connected: {joystick.get_name()}')
+    else:
+        print('no controller connected')
+
+    def read_gamepad():
+        if joystick is None:
+            return jnp.zeros(3)
+        pygame.event.pump()  # refresh axis/button state each frame
+        fwd = -joystick.get_axis(AXIS_FORWARD)   # stick up   -> +vx
+        lat = -joystick.get_axis(AXIS_LATERAL)   # stick left -> +vy
+        yaw = -joystick.get_axis(AXIS_YAW)       # stick left -> +wz
+        raw = np.array([fwd, lat, yaw], dtype=np.float32)
+        raw = np.where(np.abs(raw) < GAMEPAD_DEADZONE, 0.0, raw)  # deadzone
+        raw = np.clip(raw, -1.0, 1.0)
+        if joystick.get_button(BUTTON_RESET):
             command['reset'] = True
-            return
-        command['value'] = jnp.clip(command['value'] + delta, -CMD_MAX, CMD_MAX)
+        return jnp.asarray(raw) * CMD_MAX  # scale [-1,1] -> command range
 
     mj_model = env.mj_model
     mj_data = mujoco.MjData(mj_model)
@@ -114,12 +146,14 @@ def main():
     jit_heightmap_points = jax.jit(env._heightmap_points)
 
     with mujoco.viewer.launch_passive(
-        mj_model, mj_data, key_callback=key_callback
+        mj_model, mj_data, 
     ) as viewer:
         act_rng = jax.random.PRNGKey(1)
         last_cmd = None
         while viewer.is_running():
             step_start = time.time()
+
+            command['value'] = read_gamepad()
 
             if command['reset']:
                 rng, sub = jax.random.split(rng)
