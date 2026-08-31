@@ -81,10 +81,18 @@ def main():
     parser.add_argument("--scene", type=str, default=EnvironmentConfig.filename)
     parser.add_argument("--save-path", type=str, default=None)
     parser.add_argument("--notes", type=str, default="")
-    parser.add_argument("--max-top", type=float, default=0.20,
-                        help="Curriculum difficulty: max tile top height (box terrain).")
-    parser.add_argument("--restore-checkpoint", type=str, default=None,
-                        help="Prior stage's checkpoint dir to warm-start from.")
+    parser.add_argument(
+        "--max-top",
+        type=float,
+        default=0.20,
+        help="Curriculum difficulty: max tile top height (box terrain).",
+    )
+    parser.add_argument(
+        "--restore-checkpoint",
+        type=str,
+        default=None,
+        help="Prior stage's checkpoint dir to warm-start from.",
+    )
     args = parser.parse_args()
 
     save_path = args.save_path or f"policies/{datetime.now():%Y%m%d-%H%M%S}"
@@ -114,14 +122,16 @@ def main():
     num_tiles = sum(
         1
         for i in range(env.mj_model.ngeom)
-        if (env.mj_model.geom(i).name or '').startswith('tile_')
+        if (env.mj_model.geom(i).name or "").startswith("tile_")
     )
     randomization_fn = None
     if num_tiles > 0:
         randomization_fn = make_terrain_randomizer(
             env.mj_model, num_tiles, max_top=args.max_top
         )
-        print(f'per-env terrain randomization: {num_tiles} tiles, max_top={args.max_top}')
+        print(
+            f"per-env terrain randomization: {num_tiles} tiles, max_top={args.max_top}"
+        )
         randomization_fn = make_terrain_randomizer(env.mj_model, num_tiles)
         print(f"per-env terrain randomization: {num_tiles} tiles")
 
@@ -159,13 +169,13 @@ def main():
         },
     ) as run:
         if restore_checkpoint_path:
-            print(f'warm-starting from checkpoint: {restore_checkpoint_path}')
-        print(f'saving checkpoints to: {checkpoint_path}')
+            print(f"warm-starting from checkpoint: {restore_checkpoint_path}")
+        print(f"saving checkpoints to: {checkpoint_path}")
         train_fn = functools.partial(
             ppo.train,
             **params,
             network_factory=network_factory,
-            randomization_fn=randomization_fn,      # new randomization func
+            randomization_fn=randomization_fn,  # new randomization func
             progress_fn=make_progress_fn(run),
             seed=0,
         )
