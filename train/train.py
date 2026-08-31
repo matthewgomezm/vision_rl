@@ -28,7 +28,7 @@ from config.go2_config import (
     CommandConfig,
 )
 from environment.go2_env import UnitreeGo2Env
-from environment.terrain import make_terrain_randomizer
+from environment.terrain import make_terrain_randomizer, make_stair_randomizer
 
 # Change this to log runs under a different Weights & Biases project.
 WANDB_PROJECT = "unitree-go2-vision-rl"
@@ -89,10 +89,11 @@ def main():
 
     save_path = args.save_path or f"policies/{datetime.now():%Y%m%d-%H%M%S}"
     Path(save_path).parent.mkdir(parents=True, exist_ok=True)
-    # brax/orbax checkpointing needs an absolute directory. Keep all runs'
-    # checkpoints under policies/checkpoints/<run-name>/<step>/.
+
     checkpoint_path = os.path.abspath(f"policies/checkpoints/{Path(save_path).name}")
+    
     Path(checkpoint_path).parent.mkdir(parents=True, exist_ok=True)
+
     restore_checkpoint_path = (
         os.path.abspath(args.restore_checkpoint) if args.restore_checkpoint else None
     )
@@ -118,10 +119,16 @@ def main():
     )
     randomization_fn = None
     if num_tiles > 0:
-        randomization_fn = make_terrain_randomizer(
-            env.mj_model, num_tiles, max_top=args.max_top
-        )
-        print(f'per-env terrain randomization: {num_tiles} tiles, max_top={args.max_top}')
+        if "stairs" in args.scene:
+            randomization_fn = make_stair_randomizer(
+                env.mj_model, num_tiles, max_step=args.max_top
+            )
+            print(f'per-env stairs: {num_tiles} steps, max_step={args.max_top}')
+        else:
+            randomization_fn = make_terrain_randomizer(
+                env.mj_model, num_tiles, max_top=args.max_top
+            )
+            print(f'per-env terrain randomization: {num_tiles} tiles, max_top={args.max_top}')
         randomization_fn = make_terrain_randomizer(env.mj_model, num_tiles)
         print(f"per-env terrain randomization: {num_tiles} tiles")
 
@@ -165,7 +172,10 @@ def main():
             ppo.train,
             **params,
             network_factory=network_factory,
-            randomization_fn=randomization_fn,      # new randomization func
+            randomization_fn=randomization_fn,
+            save_checkpoint_path=checkpoint_path,
+            restore_checkpoint_path=restore_checkpoint_path,
+            restore_value_fn=True,
             progress_fn=make_progress_fn(run),
             seed=0,
         )
