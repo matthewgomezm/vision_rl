@@ -13,8 +13,8 @@ class RewardConfig:
     tracking_linear_velocity: float = 1.5
     tracking_angular_velocity: float = 0.75
     # Orientation Regularization Terms:
-    orientation_regularization: float = -0.35
-    linear_z_velocity: float = -0.25
+    orientation_regularization: float = -0.95
+    linear_z_velocity: float = -0.5
     angular_xy_velocity: float = -0.05
     # Energy Regularization Terms:
     torque: float = -2e-4
@@ -31,8 +31,8 @@ class RewardConfig:
     gait_variance: float = -0.5
     # Gait Hyperparameters:
     target_air_time: float = 0.65
-    body_height: float = -0.2
-    target_body_height: float = 0.30
+    body_height: float = -1.0
+    target_body_height: float = 0.30    
     mode_time: float = 0.3
     command_threshold: float = 0.0
     velocity_threshold: float = 0.5
