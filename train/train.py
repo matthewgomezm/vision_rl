@@ -89,8 +89,10 @@ def main():
 
     save_path = args.save_path or f"policies/{datetime.now():%Y%m%d-%H%M%S}"
     Path(save_path).parent.mkdir(parents=True, exist_ok=True)
-    # brax/orbax checkpointing needs an absolute directory.
-    checkpoint_path = os.path.abspath(f"{save_path}_ckpt")
+    # brax/orbax checkpointing needs an absolute directory. Keep all runs'
+    # checkpoints under policies/checkpoints/<run-name>/<step>/.
+    checkpoint_path = os.path.abspath(f"policies/checkpoints/{Path(save_path).name}")
+    Path(checkpoint_path).parent.mkdir(parents=True, exist_ok=True)
     restore_checkpoint_path = (
         os.path.abspath(args.restore_checkpoint) if args.restore_checkpoint else None
     )
