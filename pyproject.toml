@@ -1,13 +1,15 @@
 [project]
 name = "unitree-vision-rl"
 version = "0.1.0"
-description = "Add your description here"
+description = "Unitree Go2 Vision RL in mjlab"
 readme = "README.md"
 authors = [
     { name = "Matthew Gomez", email = "matthewgomezm10@gmail.com" }
 ]
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "mjlab>=1.6.0",
+]
 
 [project.scripts]
 unitree-vision-rl = "unitree_vision_rl:main"
