@@ -1,0 +1,496 @@
+<mujoco model="go2-mjx boxterrain">
+    <include file="models/go2_mjx_full_collision_vendor.xml"/>
+    <statistic center="0 0 0.1" extent="0.8"/>
+    <visual>
+      <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
+      <rgba haze="0.15 0.25 0.35 1"/><global azimuth="120" elevation="-20"/>
+    </visual>
+    <asset>
+        <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+        <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
+            markrgb="0.8 0.8 0.8" width="300" height="300"/>
+        <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+    </asset>
+    <worldbody>
+        <light pos="0 0 1.5" dir="0 0 -1" directional="true"/>
+        <camera name="default" pos="0.846 -1.465 0.916" xyaxes="0.866 0.500 0.000 -0.171 0.296 0.940"/>
+        <geom name="floor" size="0 0 0.05" type="plane" material="groundplane"/>
+        <geom name="tile_0" type="box" size="0.500 0.500 0.150" pos="-2.500 -2.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_1" type="box" size="0.500 0.500 0.150" pos="-2.500 -1.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_2" type="box" size="0.500 0.500 0.150" pos="-2.500 -0.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_3" type="box" size="0.500 0.500 0.150" pos="-2.500 0.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_4" type="box" size="0.500 0.500 0.150" pos="-2.500 1.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_5" type="box" size="0.500 0.500 0.150" pos="-2.500 2.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_6" type="box" size="0.500 0.500 0.150" pos="-1.500 -2.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_7" type="box" size="0.500 0.500 0.150" pos="-1.500 -1.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_8" type="box" size="0.500 0.500 0.150" pos="-1.500 -0.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_9" type="box" size="0.500 0.500 0.150" pos="-1.500 0.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_10" type="box" size="0.500 0.500 0.150" pos="-1.500 1.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_11" type="box" size="0.500 0.500 0.150" pos="-1.500 2.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_12" type="box" size="0.500 0.500 0.150" pos="-0.500 -2.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_13" type="box" size="0.500 0.500 0.150" pos="-0.500 -1.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_14" type="box" size="0.500 0.500 0.150" pos="-0.500 -0.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_15" type="box" size="0.500 0.500 0.150" pos="-0.500 0.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_16" type="box" size="0.500 0.500 0.150" pos="-0.500 1.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_17" type="box" size="0.500 0.500 0.150" pos="-0.500 2.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_18" type="box" size="0.500 0.500 0.150" pos="0.500 -2.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_19" type="box" size="0.500 0.500 0.150" pos="0.500 -1.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_20" type="box" size="0.500 0.500 0.150" pos="0.500 -0.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_21" type="box" size="0.500 0.500 0.150" pos="0.500 0.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_22" type="box" size="0.500 0.500 0.150" pos="0.500 1.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_23" type="box" size="0.500 0.500 0.150" pos="0.500 2.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_24" type="box" size="0.500 0.500 0.150" pos="1.500 -2.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_25" type="box" size="0.500 0.500 0.150" pos="1.500 -1.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_26" type="box" size="0.500 0.500 0.150" pos="1.500 -0.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_27" type="box" size="0.500 0.500 0.150" pos="1.500 0.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_28" type="box" size="0.500 0.500 0.150" pos="1.500 1.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_29" type="box" size="0.500 0.500 0.150" pos="1.500 2.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_30" type="box" size="0.500 0.500 0.150" pos="2.500 -2.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_31" type="box" size="0.500 0.500 0.150" pos="2.500 -1.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_32" type="box" size="0.500 0.500 0.150" pos="2.500 -0.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_33" type="box" size="0.500 0.500 0.150" pos="2.500 0.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_34" type="box" size="0.500 0.500 0.150" pos="2.500 1.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+        <geom name="tile_35" type="box" size="0.500 0.500 0.150" pos="2.500 2.500 -0.130" rgba="0.55 0.45 0.40 1"/>
+    </worldbody>
+    <contact>
+        <pair name="tile_0_p0" geom1="front_right_foot_collision" geom2="tile_0" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_0_p1" geom1="front_left_foot_collision" geom2="tile_0" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_0_p2" geom1="hind_right_foot_collision" geom2="tile_0" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_0_p3" geom1="hind_left_foot_collision" geom2="tile_0" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_0_p4" geom1="front_right_calf_upper_collision" geom2="tile_0" condim="1" friction="0.8"/>
+        <pair name="tile_0_p5" geom1="front_right_calf_lower_collision" geom2="tile_0" condim="1" friction="0.8"/>
+        <pair name="tile_0_p6" geom1="front_left_calf_upper_collision" geom2="tile_0" condim="1" friction="0.8"/>
+        <pair name="tile_0_p7" geom1="front_left_calf_lower_collision" geom2="tile_0" condim="1" friction="0.8"/>
+        <pair name="tile_0_p8" geom1="hind_right_calf_upper_collision" geom2="tile_0" condim="1" friction="0.8"/>
+        <pair name="tile_0_p9" geom1="hind_right_calf_lower_collision" geom2="tile_0" condim="1" friction="0.8"/>
+        <pair name="tile_0_p10" geom1="hind_left_calf_upper_collision" geom2="tile_0" condim="1" friction="0.8"/>
+        <pair name="tile_0_p11" geom1="hind_left_calf_lower_collision" geom2="tile_0" condim="1" friction="0.8"/>
+        <pair name="tile_1_p0" geom1="front_right_foot_collision" geom2="tile_1" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_1_p1" geom1="front_left_foot_collision" geom2="tile_1" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_1_p2" geom1="hind_right_foot_collision" geom2="tile_1" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_1_p3" geom1="hind_left_foot_collision" geom2="tile_1" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_1_p4" geom1="front_right_calf_upper_collision" geom2="tile_1" condim="1" friction="0.8"/>
+        <pair name="tile_1_p5" geom1="front_right_calf_lower_collision" geom2="tile_1" condim="1" friction="0.8"/>
+        <pair name="tile_1_p6" geom1="front_left_calf_upper_collision" geom2="tile_1" condim="1" friction="0.8"/>
+        <pair name="tile_1_p7" geom1="front_left_calf_lower_collision" geom2="tile_1" condim="1" friction="0.8"/>
+        <pair name="tile_1_p8" geom1="hind_right_calf_upper_collision" geom2="tile_1" condim="1" friction="0.8"/>
+        <pair name="tile_1_p9" geom1="hind_right_calf_lower_collision" geom2="tile_1" condim="1" friction="0.8"/>
+        <pair name="tile_1_p10" geom1="hind_left_calf_upper_collision" geom2="tile_1" condim="1" friction="0.8"/>
+        <pair name="tile_1_p11" geom1="hind_left_calf_lower_collision" geom2="tile_1" condim="1" friction="0.8"/>
+        <pair name="tile_2_p0" geom1="front_right_foot_collision" geom2="tile_2" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_2_p1" geom1="front_left_foot_collision" geom2="tile_2" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_2_p2" geom1="hind_right_foot_collision" geom2="tile_2" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_2_p3" geom1="hind_left_foot_collision" geom2="tile_2" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_2_p4" geom1="front_right_calf_upper_collision" geom2="tile_2" condim="1" friction="0.8"/>
+        <pair name="tile_2_p5" geom1="front_right_calf_lower_collision" geom2="tile_2" condim="1" friction="0.8"/>
+        <pair name="tile_2_p6" geom1="front_left_calf_upper_collision" geom2="tile_2" condim="1" friction="0.8"/>
+        <pair name="tile_2_p7" geom1="front_left_calf_lower_collision" geom2="tile_2" condim="1" friction="0.8"/>
+        <pair name="tile_2_p8" geom1="hind_right_calf_upper_collision" geom2="tile_2" condim="1" friction="0.8"/>
+        <pair name="tile_2_p9" geom1="hind_right_calf_lower_collision" geom2="tile_2" condim="1" friction="0.8"/>
+        <pair name="tile_2_p10" geom1="hind_left_calf_upper_collision" geom2="tile_2" condim="1" friction="0.8"/>
+        <pair name="tile_2_p11" geom1="hind_left_calf_lower_collision" geom2="tile_2" condim="1" friction="0.8"/>
+        <pair name="tile_3_p0" geom1="front_right_foot_collision" geom2="tile_3" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_3_p1" geom1="front_left_foot_collision" geom2="tile_3" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_3_p2" geom1="hind_right_foot_collision" geom2="tile_3" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_3_p3" geom1="hind_left_foot_collision" geom2="tile_3" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_3_p4" geom1="front_right_calf_upper_collision" geom2="tile_3" condim="1" friction="0.8"/>
+        <pair name="tile_3_p5" geom1="front_right_calf_lower_collision" geom2="tile_3" condim="1" friction="0.8"/>
+        <pair name="tile_3_p6" geom1="front_left_calf_upper_collision" geom2="tile_3" condim="1" friction="0.8"/>
+        <pair name="tile_3_p7" geom1="front_left_calf_lower_collision" geom2="tile_3" condim="1" friction="0.8"/>
+        <pair name="tile_3_p8" geom1="hind_right_calf_upper_collision" geom2="tile_3" condim="1" friction="0.8"/>
+        <pair name="tile_3_p9" geom1="hind_right_calf_lower_collision" geom2="tile_3" condim="1" friction="0.8"/>
+        <pair name="tile_3_p10" geom1="hind_left_calf_upper_collision" geom2="tile_3" condim="1" friction="0.8"/>
+        <pair name="tile_3_p11" geom1="hind_left_calf_lower_collision" geom2="tile_3" condim="1" friction="0.8"/>
+        <pair name="tile_4_p0" geom1="front_right_foot_collision" geom2="tile_4" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_4_p1" geom1="front_left_foot_collision" geom2="tile_4" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_4_p2" geom1="hind_right_foot_collision" geom2="tile_4" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_4_p3" geom1="hind_left_foot_collision" geom2="tile_4" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_4_p4" geom1="front_right_calf_upper_collision" geom2="tile_4" condim="1" friction="0.8"/>
+        <pair name="tile_4_p5" geom1="front_right_calf_lower_collision" geom2="tile_4" condim="1" friction="0.8"/>
+        <pair name="tile_4_p6" geom1="front_left_calf_upper_collision" geom2="tile_4" condim="1" friction="0.8"/>
+        <pair name="tile_4_p7" geom1="front_left_calf_lower_collision" geom2="tile_4" condim="1" friction="0.8"/>
+        <pair name="tile_4_p8" geom1="hind_right_calf_upper_collision" geom2="tile_4" condim="1" friction="0.8"/>
+        <pair name="tile_4_p9" geom1="hind_right_calf_lower_collision" geom2="tile_4" condim="1" friction="0.8"/>
+        <pair name="tile_4_p10" geom1="hind_left_calf_upper_collision" geom2="tile_4" condim="1" friction="0.8"/>
+        <pair name="tile_4_p11" geom1="hind_left_calf_lower_collision" geom2="tile_4" condim="1" friction="0.8"/>
+        <pair name="tile_5_p0" geom1="front_right_foot_collision" geom2="tile_5" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_5_p1" geom1="front_left_foot_collision" geom2="tile_5" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_5_p2" geom1="hind_right_foot_collision" geom2="tile_5" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_5_p3" geom1="hind_left_foot_collision" geom2="tile_5" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_5_p4" geom1="front_right_calf_upper_collision" geom2="tile_5" condim="1" friction="0.8"/>
+        <pair name="tile_5_p5" geom1="front_right_calf_lower_collision" geom2="tile_5" condim="1" friction="0.8"/>
+        <pair name="tile_5_p6" geom1="front_left_calf_upper_collision" geom2="tile_5" condim="1" friction="0.8"/>
+        <pair name="tile_5_p7" geom1="front_left_calf_lower_collision" geom2="tile_5" condim="1" friction="0.8"/>
+        <pair name="tile_5_p8" geom1="hind_right_calf_upper_collision" geom2="tile_5" condim="1" friction="0.8"/>
+        <pair name="tile_5_p9" geom1="hind_right_calf_lower_collision" geom2="tile_5" condim="1" friction="0.8"/>
+        <pair name="tile_5_p10" geom1="hind_left_calf_upper_collision" geom2="tile_5" condim="1" friction="0.8"/>
+        <pair name="tile_5_p11" geom1="hind_left_calf_lower_collision" geom2="tile_5" condim="1" friction="0.8"/>
+        <pair name="tile_6_p0" geom1="front_right_foot_collision" geom2="tile_6" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_6_p1" geom1="front_left_foot_collision" geom2="tile_6" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_6_p2" geom1="hind_right_foot_collision" geom2="tile_6" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_6_p3" geom1="hind_left_foot_collision" geom2="tile_6" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_6_p4" geom1="front_right_calf_upper_collision" geom2="tile_6" condim="1" friction="0.8"/>
+        <pair name="tile_6_p5" geom1="front_right_calf_lower_collision" geom2="tile_6" condim="1" friction="0.8"/>
+        <pair name="tile_6_p6" geom1="front_left_calf_upper_collision" geom2="tile_6" condim="1" friction="0.8"/>
+        <pair name="tile_6_p7" geom1="front_left_calf_lower_collision" geom2="tile_6" condim="1" friction="0.8"/>
+        <pair name="tile_6_p8" geom1="hind_right_calf_upper_collision" geom2="tile_6" condim="1" friction="0.8"/>
+        <pair name="tile_6_p9" geom1="hind_right_calf_lower_collision" geom2="tile_6" condim="1" friction="0.8"/>
+        <pair name="tile_6_p10" geom1="hind_left_calf_upper_collision" geom2="tile_6" condim="1" friction="0.8"/>
+        <pair name="tile_6_p11" geom1="hind_left_calf_lower_collision" geom2="tile_6" condim="1" friction="0.8"/>
+        <pair name="tile_7_p0" geom1="front_right_foot_collision" geom2="tile_7" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_7_p1" geom1="front_left_foot_collision" geom2="tile_7" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_7_p2" geom1="hind_right_foot_collision" geom2="tile_7" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_7_p3" geom1="hind_left_foot_collision" geom2="tile_7" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_7_p4" geom1="front_right_calf_upper_collision" geom2="tile_7" condim="1" friction="0.8"/>
+        <pair name="tile_7_p5" geom1="front_right_calf_lower_collision" geom2="tile_7" condim="1" friction="0.8"/>
+        <pair name="tile_7_p6" geom1="front_left_calf_upper_collision" geom2="tile_7" condim="1" friction="0.8"/>
+        <pair name="tile_7_p7" geom1="front_left_calf_lower_collision" geom2="tile_7" condim="1" friction="0.8"/>
+        <pair name="tile_7_p8" geom1="hind_right_calf_upper_collision" geom2="tile_7" condim="1" friction="0.8"/>
+        <pair name="tile_7_p9" geom1="hind_right_calf_lower_collision" geom2="tile_7" condim="1" friction="0.8"/>
+        <pair name="tile_7_p10" geom1="hind_left_calf_upper_collision" geom2="tile_7" condim="1" friction="0.8"/>
+        <pair name="tile_7_p11" geom1="hind_left_calf_lower_collision" geom2="tile_7" condim="1" friction="0.8"/>
+        <pair name="tile_8_p0" geom1="front_right_foot_collision" geom2="tile_8" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_8_p1" geom1="front_left_foot_collision" geom2="tile_8" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_8_p2" geom1="hind_right_foot_collision" geom2="tile_8" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_8_p3" geom1="hind_left_foot_collision" geom2="tile_8" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_8_p4" geom1="front_right_calf_upper_collision" geom2="tile_8" condim="1" friction="0.8"/>
+        <pair name="tile_8_p5" geom1="front_right_calf_lower_collision" geom2="tile_8" condim="1" friction="0.8"/>
+        <pair name="tile_8_p6" geom1="front_left_calf_upper_collision" geom2="tile_8" condim="1" friction="0.8"/>
+        <pair name="tile_8_p7" geom1="front_left_calf_lower_collision" geom2="tile_8" condim="1" friction="0.8"/>
+        <pair name="tile_8_p8" geom1="hind_right_calf_upper_collision" geom2="tile_8" condim="1" friction="0.8"/>
+        <pair name="tile_8_p9" geom1="hind_right_calf_lower_collision" geom2="tile_8" condim="1" friction="0.8"/>
+        <pair name="tile_8_p10" geom1="hind_left_calf_upper_collision" geom2="tile_8" condim="1" friction="0.8"/>
+        <pair name="tile_8_p11" geom1="hind_left_calf_lower_collision" geom2="tile_8" condim="1" friction="0.8"/>
+        <pair name="tile_9_p0" geom1="front_right_foot_collision" geom2="tile_9" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_9_p1" geom1="front_left_foot_collision" geom2="tile_9" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_9_p2" geom1="hind_right_foot_collision" geom2="tile_9" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_9_p3" geom1="hind_left_foot_collision" geom2="tile_9" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_9_p4" geom1="front_right_calf_upper_collision" geom2="tile_9" condim="1" friction="0.8"/>
+        <pair name="tile_9_p5" geom1="front_right_calf_lower_collision" geom2="tile_9" condim="1" friction="0.8"/>
+        <pair name="tile_9_p6" geom1="front_left_calf_upper_collision" geom2="tile_9" condim="1" friction="0.8"/>
+        <pair name="tile_9_p7" geom1="front_left_calf_lower_collision" geom2="tile_9" condim="1" friction="0.8"/>
+        <pair name="tile_9_p8" geom1="hind_right_calf_upper_collision" geom2="tile_9" condim="1" friction="0.8"/>
+        <pair name="tile_9_p9" geom1="hind_right_calf_lower_collision" geom2="tile_9" condim="1" friction="0.8"/>
+        <pair name="tile_9_p10" geom1="hind_left_calf_upper_collision" geom2="tile_9" condim="1" friction="0.8"/>
+        <pair name="tile_9_p11" geom1="hind_left_calf_lower_collision" geom2="tile_9" condim="1" friction="0.8"/>
+        <pair name="tile_10_p0" geom1="front_right_foot_collision" geom2="tile_10" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_10_p1" geom1="front_left_foot_collision" geom2="tile_10" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_10_p2" geom1="hind_right_foot_collision" geom2="tile_10" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_10_p3" geom1="hind_left_foot_collision" geom2="tile_10" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_10_p4" geom1="front_right_calf_upper_collision" geom2="tile_10" condim="1" friction="0.8"/>
+        <pair name="tile_10_p5" geom1="front_right_calf_lower_collision" geom2="tile_10" condim="1" friction="0.8"/>
+        <pair name="tile_10_p6" geom1="front_left_calf_upper_collision" geom2="tile_10" condim="1" friction="0.8"/>
+        <pair name="tile_10_p7" geom1="front_left_calf_lower_collision" geom2="tile_10" condim="1" friction="0.8"/>
+        <pair name="tile_10_p8" geom1="hind_right_calf_upper_collision" geom2="tile_10" condim="1" friction="0.8"/>
+        <pair name="tile_10_p9" geom1="hind_right_calf_lower_collision" geom2="tile_10" condim="1" friction="0.8"/>
+        <pair name="tile_10_p10" geom1="hind_left_calf_upper_collision" geom2="tile_10" condim="1" friction="0.8"/>
+        <pair name="tile_10_p11" geom1="hind_left_calf_lower_collision" geom2="tile_10" condim="1" friction="0.8"/>
+        <pair name="tile_11_p0" geom1="front_right_foot_collision" geom2="tile_11" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_11_p1" geom1="front_left_foot_collision" geom2="tile_11" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_11_p2" geom1="hind_right_foot_collision" geom2="tile_11" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_11_p3" geom1="hind_left_foot_collision" geom2="tile_11" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_11_p4" geom1="front_right_calf_upper_collision" geom2="tile_11" condim="1" friction="0.8"/>
+        <pair name="tile_11_p5" geom1="front_right_calf_lower_collision" geom2="tile_11" condim="1" friction="0.8"/>
+        <pair name="tile_11_p6" geom1="front_left_calf_upper_collision" geom2="tile_11" condim="1" friction="0.8"/>
+        <pair name="tile_11_p7" geom1="front_left_calf_lower_collision" geom2="tile_11" condim="1" friction="0.8"/>
+        <pair name="tile_11_p8" geom1="hind_right_calf_upper_collision" geom2="tile_11" condim="1" friction="0.8"/>
+        <pair name="tile_11_p9" geom1="hind_right_calf_lower_collision" geom2="tile_11" condim="1" friction="0.8"/>
+        <pair name="tile_11_p10" geom1="hind_left_calf_upper_collision" geom2="tile_11" condim="1" friction="0.8"/>
+        <pair name="tile_11_p11" geom1="hind_left_calf_lower_collision" geom2="tile_11" condim="1" friction="0.8"/>
+        <pair name="tile_12_p0" geom1="front_right_foot_collision" geom2="tile_12" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_12_p1" geom1="front_left_foot_collision" geom2="tile_12" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_12_p2" geom1="hind_right_foot_collision" geom2="tile_12" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_12_p3" geom1="hind_left_foot_collision" geom2="tile_12" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_12_p4" geom1="front_right_calf_upper_collision" geom2="tile_12" condim="1" friction="0.8"/>
+        <pair name="tile_12_p5" geom1="front_right_calf_lower_collision" geom2="tile_12" condim="1" friction="0.8"/>
+        <pair name="tile_12_p6" geom1="front_left_calf_upper_collision" geom2="tile_12" condim="1" friction="0.8"/>
+        <pair name="tile_12_p7" geom1="front_left_calf_lower_collision" geom2="tile_12" condim="1" friction="0.8"/>
+        <pair name="tile_12_p8" geom1="hind_right_calf_upper_collision" geom2="tile_12" condim="1" friction="0.8"/>
+        <pair name="tile_12_p9" geom1="hind_right_calf_lower_collision" geom2="tile_12" condim="1" friction="0.8"/>
+        <pair name="tile_12_p10" geom1="hind_left_calf_upper_collision" geom2="tile_12" condim="1" friction="0.8"/>
+        <pair name="tile_12_p11" geom1="hind_left_calf_lower_collision" geom2="tile_12" condim="1" friction="0.8"/>
+        <pair name="tile_13_p0" geom1="front_right_foot_collision" geom2="tile_13" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_13_p1" geom1="front_left_foot_collision" geom2="tile_13" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_13_p2" geom1="hind_right_foot_collision" geom2="tile_13" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_13_p3" geom1="hind_left_foot_collision" geom2="tile_13" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_13_p4" geom1="front_right_calf_upper_collision" geom2="tile_13" condim="1" friction="0.8"/>
+        <pair name="tile_13_p5" geom1="front_right_calf_lower_collision" geom2="tile_13" condim="1" friction="0.8"/>
+        <pair name="tile_13_p6" geom1="front_left_calf_upper_collision" geom2="tile_13" condim="1" friction="0.8"/>
+        <pair name="tile_13_p7" geom1="front_left_calf_lower_collision" geom2="tile_13" condim="1" friction="0.8"/>
+        <pair name="tile_13_p8" geom1="hind_right_calf_upper_collision" geom2="tile_13" condim="1" friction="0.8"/>
+        <pair name="tile_13_p9" geom1="hind_right_calf_lower_collision" geom2="tile_13" condim="1" friction="0.8"/>
+        <pair name="tile_13_p10" geom1="hind_left_calf_upper_collision" geom2="tile_13" condim="1" friction="0.8"/>
+        <pair name="tile_13_p11" geom1="hind_left_calf_lower_collision" geom2="tile_13" condim="1" friction="0.8"/>
+        <pair name="tile_14_p0" geom1="front_right_foot_collision" geom2="tile_14" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_14_p1" geom1="front_left_foot_collision" geom2="tile_14" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_14_p2" geom1="hind_right_foot_collision" geom2="tile_14" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_14_p3" geom1="hind_left_foot_collision" geom2="tile_14" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_14_p4" geom1="front_right_calf_upper_collision" geom2="tile_14" condim="1" friction="0.8"/>
+        <pair name="tile_14_p5" geom1="front_right_calf_lower_collision" geom2="tile_14" condim="1" friction="0.8"/>
+        <pair name="tile_14_p6" geom1="front_left_calf_upper_collision" geom2="tile_14" condim="1" friction="0.8"/>
+        <pair name="tile_14_p7" geom1="front_left_calf_lower_collision" geom2="tile_14" condim="1" friction="0.8"/>
+        <pair name="tile_14_p8" geom1="hind_right_calf_upper_collision" geom2="tile_14" condim="1" friction="0.8"/>
+        <pair name="tile_14_p9" geom1="hind_right_calf_lower_collision" geom2="tile_14" condim="1" friction="0.8"/>
+        <pair name="tile_14_p10" geom1="hind_left_calf_upper_collision" geom2="tile_14" condim="1" friction="0.8"/>
+        <pair name="tile_14_p11" geom1="hind_left_calf_lower_collision" geom2="tile_14" condim="1" friction="0.8"/>
+        <pair name="tile_15_p0" geom1="front_right_foot_collision" geom2="tile_15" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_15_p1" geom1="front_left_foot_collision" geom2="tile_15" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_15_p2" geom1="hind_right_foot_collision" geom2="tile_15" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_15_p3" geom1="hind_left_foot_collision" geom2="tile_15" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_15_p4" geom1="front_right_calf_upper_collision" geom2="tile_15" condim="1" friction="0.8"/>
+        <pair name="tile_15_p5" geom1="front_right_calf_lower_collision" geom2="tile_15" condim="1" friction="0.8"/>
+        <pair name="tile_15_p6" geom1="front_left_calf_upper_collision" geom2="tile_15" condim="1" friction="0.8"/>
+        <pair name="tile_15_p7" geom1="front_left_calf_lower_collision" geom2="tile_15" condim="1" friction="0.8"/>
+        <pair name="tile_15_p8" geom1="hind_right_calf_upper_collision" geom2="tile_15" condim="1" friction="0.8"/>
+        <pair name="tile_15_p9" geom1="hind_right_calf_lower_collision" geom2="tile_15" condim="1" friction="0.8"/>
+        <pair name="tile_15_p10" geom1="hind_left_calf_upper_collision" geom2="tile_15" condim="1" friction="0.8"/>
+        <pair name="tile_15_p11" geom1="hind_left_calf_lower_collision" geom2="tile_15" condim="1" friction="0.8"/>
+        <pair name="tile_16_p0" geom1="front_right_foot_collision" geom2="tile_16" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_16_p1" geom1="front_left_foot_collision" geom2="tile_16" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_16_p2" geom1="hind_right_foot_collision" geom2="tile_16" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_16_p3" geom1="hind_left_foot_collision" geom2="tile_16" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_16_p4" geom1="front_right_calf_upper_collision" geom2="tile_16" condim="1" friction="0.8"/>
+        <pair name="tile_16_p5" geom1="front_right_calf_lower_collision" geom2="tile_16" condim="1" friction="0.8"/>
+        <pair name="tile_16_p6" geom1="front_left_calf_upper_collision" geom2="tile_16" condim="1" friction="0.8"/>
+        <pair name="tile_16_p7" geom1="front_left_calf_lower_collision" geom2="tile_16" condim="1" friction="0.8"/>
+        <pair name="tile_16_p8" geom1="hind_right_calf_upper_collision" geom2="tile_16" condim="1" friction="0.8"/>
+        <pair name="tile_16_p9" geom1="hind_right_calf_lower_collision" geom2="tile_16" condim="1" friction="0.8"/>
+        <pair name="tile_16_p10" geom1="hind_left_calf_upper_collision" geom2="tile_16" condim="1" friction="0.8"/>
+        <pair name="tile_16_p11" geom1="hind_left_calf_lower_collision" geom2="tile_16" condim="1" friction="0.8"/>
+        <pair name="tile_17_p0" geom1="front_right_foot_collision" geom2="tile_17" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_17_p1" geom1="front_left_foot_collision" geom2="tile_17" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_17_p2" geom1="hind_right_foot_collision" geom2="tile_17" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_17_p3" geom1="hind_left_foot_collision" geom2="tile_17" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_17_p4" geom1="front_right_calf_upper_collision" geom2="tile_17" condim="1" friction="0.8"/>
+        <pair name="tile_17_p5" geom1="front_right_calf_lower_collision" geom2="tile_17" condim="1" friction="0.8"/>
+        <pair name="tile_17_p6" geom1="front_left_calf_upper_collision" geom2="tile_17" condim="1" friction="0.8"/>
+        <pair name="tile_17_p7" geom1="front_left_calf_lower_collision" geom2="tile_17" condim="1" friction="0.8"/>
+        <pair name="tile_17_p8" geom1="hind_right_calf_upper_collision" geom2="tile_17" condim="1" friction="0.8"/>
+        <pair name="tile_17_p9" geom1="hind_right_calf_lower_collision" geom2="tile_17" condim="1" friction="0.8"/>
+        <pair name="tile_17_p10" geom1="hind_left_calf_upper_collision" geom2="tile_17" condim="1" friction="0.8"/>
+        <pair name="tile_17_p11" geom1="hind_left_calf_lower_collision" geom2="tile_17" condim="1" friction="0.8"/>
+        <pair name="tile_18_p0" geom1="front_right_foot_collision" geom2="tile_18" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_18_p1" geom1="front_left_foot_collision" geom2="tile_18" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_18_p2" geom1="hind_right_foot_collision" geom2="tile_18" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_18_p3" geom1="hind_left_foot_collision" geom2="tile_18" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_18_p4" geom1="front_right_calf_upper_collision" geom2="tile_18" condim="1" friction="0.8"/>
+        <pair name="tile_18_p5" geom1="front_right_calf_lower_collision" geom2="tile_18" condim="1" friction="0.8"/>
+        <pair name="tile_18_p6" geom1="front_left_calf_upper_collision" geom2="tile_18" condim="1" friction="0.8"/>
+        <pair name="tile_18_p7" geom1="front_left_calf_lower_collision" geom2="tile_18" condim="1" friction="0.8"/>
+        <pair name="tile_18_p8" geom1="hind_right_calf_upper_collision" geom2="tile_18" condim="1" friction="0.8"/>
+        <pair name="tile_18_p9" geom1="hind_right_calf_lower_collision" geom2="tile_18" condim="1" friction="0.8"/>
+        <pair name="tile_18_p10" geom1="hind_left_calf_upper_collision" geom2="tile_18" condim="1" friction="0.8"/>
+        <pair name="tile_18_p11" geom1="hind_left_calf_lower_collision" geom2="tile_18" condim="1" friction="0.8"/>
+        <pair name="tile_19_p0" geom1="front_right_foot_collision" geom2="tile_19" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_19_p1" geom1="front_left_foot_collision" geom2="tile_19" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_19_p2" geom1="hind_right_foot_collision" geom2="tile_19" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_19_p3" geom1="hind_left_foot_collision" geom2="tile_19" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_19_p4" geom1="front_right_calf_upper_collision" geom2="tile_19" condim="1" friction="0.8"/>
+        <pair name="tile_19_p5" geom1="front_right_calf_lower_collision" geom2="tile_19" condim="1" friction="0.8"/>
+        <pair name="tile_19_p6" geom1="front_left_calf_upper_collision" geom2="tile_19" condim="1" friction="0.8"/>
+        <pair name="tile_19_p7" geom1="front_left_calf_lower_collision" geom2="tile_19" condim="1" friction="0.8"/>
+        <pair name="tile_19_p8" geom1="hind_right_calf_upper_collision" geom2="tile_19" condim="1" friction="0.8"/>
+        <pair name="tile_19_p9" geom1="hind_right_calf_lower_collision" geom2="tile_19" condim="1" friction="0.8"/>
+        <pair name="tile_19_p10" geom1="hind_left_calf_upper_collision" geom2="tile_19" condim="1" friction="0.8"/>
+        <pair name="tile_19_p11" geom1="hind_left_calf_lower_collision" geom2="tile_19" condim="1" friction="0.8"/>
+        <pair name="tile_20_p0" geom1="front_right_foot_collision" geom2="tile_20" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_20_p1" geom1="front_left_foot_collision" geom2="tile_20" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_20_p2" geom1="hind_right_foot_collision" geom2="tile_20" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_20_p3" geom1="hind_left_foot_collision" geom2="tile_20" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_20_p4" geom1="front_right_calf_upper_collision" geom2="tile_20" condim="1" friction="0.8"/>
+        <pair name="tile_20_p5" geom1="front_right_calf_lower_collision" geom2="tile_20" condim="1" friction="0.8"/>
+        <pair name="tile_20_p6" geom1="front_left_calf_upper_collision" geom2="tile_20" condim="1" friction="0.8"/>
+        <pair name="tile_20_p7" geom1="front_left_calf_lower_collision" geom2="tile_20" condim="1" friction="0.8"/>
+        <pair name="tile_20_p8" geom1="hind_right_calf_upper_collision" geom2="tile_20" condim="1" friction="0.8"/>
+        <pair name="tile_20_p9" geom1="hind_right_calf_lower_collision" geom2="tile_20" condim="1" friction="0.8"/>
+        <pair name="tile_20_p10" geom1="hind_left_calf_upper_collision" geom2="tile_20" condim="1" friction="0.8"/>
+        <pair name="tile_20_p11" geom1="hind_left_calf_lower_collision" geom2="tile_20" condim="1" friction="0.8"/>
+        <pair name="tile_21_p0" geom1="front_right_foot_collision" geom2="tile_21" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_21_p1" geom1="front_left_foot_collision" geom2="tile_21" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_21_p2" geom1="hind_right_foot_collision" geom2="tile_21" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_21_p3" geom1="hind_left_foot_collision" geom2="tile_21" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_21_p4" geom1="front_right_calf_upper_collision" geom2="tile_21" condim="1" friction="0.8"/>
+        <pair name="tile_21_p5" geom1="front_right_calf_lower_collision" geom2="tile_21" condim="1" friction="0.8"/>
+        <pair name="tile_21_p6" geom1="front_left_calf_upper_collision" geom2="tile_21" condim="1" friction="0.8"/>
+        <pair name="tile_21_p7" geom1="front_left_calf_lower_collision" geom2="tile_21" condim="1" friction="0.8"/>
+        <pair name="tile_21_p8" geom1="hind_right_calf_upper_collision" geom2="tile_21" condim="1" friction="0.8"/>
+        <pair name="tile_21_p9" geom1="hind_right_calf_lower_collision" geom2="tile_21" condim="1" friction="0.8"/>
+        <pair name="tile_21_p10" geom1="hind_left_calf_upper_collision" geom2="tile_21" condim="1" friction="0.8"/>
+        <pair name="tile_21_p11" geom1="hind_left_calf_lower_collision" geom2="tile_21" condim="1" friction="0.8"/>
+        <pair name="tile_22_p0" geom1="front_right_foot_collision" geom2="tile_22" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_22_p1" geom1="front_left_foot_collision" geom2="tile_22" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_22_p2" geom1="hind_right_foot_collision" geom2="tile_22" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_22_p3" geom1="hind_left_foot_collision" geom2="tile_22" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_22_p4" geom1="front_right_calf_upper_collision" geom2="tile_22" condim="1" friction="0.8"/>
+        <pair name="tile_22_p5" geom1="front_right_calf_lower_collision" geom2="tile_22" condim="1" friction="0.8"/>
+        <pair name="tile_22_p6" geom1="front_left_calf_upper_collision" geom2="tile_22" condim="1" friction="0.8"/>
+        <pair name="tile_22_p7" geom1="front_left_calf_lower_collision" geom2="tile_22" condim="1" friction="0.8"/>
+        <pair name="tile_22_p8" geom1="hind_right_calf_upper_collision" geom2="tile_22" condim="1" friction="0.8"/>
+        <pair name="tile_22_p9" geom1="hind_right_calf_lower_collision" geom2="tile_22" condim="1" friction="0.8"/>
+        <pair name="tile_22_p10" geom1="hind_left_calf_upper_collision" geom2="tile_22" condim="1" friction="0.8"/>
+        <pair name="tile_22_p11" geom1="hind_left_calf_lower_collision" geom2="tile_22" condim="1" friction="0.8"/>
+        <pair name="tile_23_p0" geom1="front_right_foot_collision" geom2="tile_23" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_23_p1" geom1="front_left_foot_collision" geom2="tile_23" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_23_p2" geom1="hind_right_foot_collision" geom2="tile_23" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_23_p3" geom1="hind_left_foot_collision" geom2="tile_23" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_23_p4" geom1="front_right_calf_upper_collision" geom2="tile_23" condim="1" friction="0.8"/>
+        <pair name="tile_23_p5" geom1="front_right_calf_lower_collision" geom2="tile_23" condim="1" friction="0.8"/>
+        <pair name="tile_23_p6" geom1="front_left_calf_upper_collision" geom2="tile_23" condim="1" friction="0.8"/>
+        <pair name="tile_23_p7" geom1="front_left_calf_lower_collision" geom2="tile_23" condim="1" friction="0.8"/>
+        <pair name="tile_23_p8" geom1="hind_right_calf_upper_collision" geom2="tile_23" condim="1" friction="0.8"/>
+        <pair name="tile_23_p9" geom1="hind_right_calf_lower_collision" geom2="tile_23" condim="1" friction="0.8"/>
+        <pair name="tile_23_p10" geom1="hind_left_calf_upper_collision" geom2="tile_23" condim="1" friction="0.8"/>
+        <pair name="tile_23_p11" geom1="hind_left_calf_lower_collision" geom2="tile_23" condim="1" friction="0.8"/>
+        <pair name="tile_24_p0" geom1="front_right_foot_collision" geom2="tile_24" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_24_p1" geom1="front_left_foot_collision" geom2="tile_24" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_24_p2" geom1="hind_right_foot_collision" geom2="tile_24" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_24_p3" geom1="hind_left_foot_collision" geom2="tile_24" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_24_p4" geom1="front_right_calf_upper_collision" geom2="tile_24" condim="1" friction="0.8"/>
+        <pair name="tile_24_p5" geom1="front_right_calf_lower_collision" geom2="tile_24" condim="1" friction="0.8"/>
+        <pair name="tile_24_p6" geom1="front_left_calf_upper_collision" geom2="tile_24" condim="1" friction="0.8"/>
+        <pair name="tile_24_p7" geom1="front_left_calf_lower_collision" geom2="tile_24" condim="1" friction="0.8"/>
+        <pair name="tile_24_p8" geom1="hind_right_calf_upper_collision" geom2="tile_24" condim="1" friction="0.8"/>
+        <pair name="tile_24_p9" geom1="hind_right_calf_lower_collision" geom2="tile_24" condim="1" friction="0.8"/>
+        <pair name="tile_24_p10" geom1="hind_left_calf_upper_collision" geom2="tile_24" condim="1" friction="0.8"/>
+        <pair name="tile_24_p11" geom1="hind_left_calf_lower_collision" geom2="tile_24" condim="1" friction="0.8"/>
+        <pair name="tile_25_p0" geom1="front_right_foot_collision" geom2="tile_25" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_25_p1" geom1="front_left_foot_collision" geom2="tile_25" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_25_p2" geom1="hind_right_foot_collision" geom2="tile_25" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_25_p3" geom1="hind_left_foot_collision" geom2="tile_25" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_25_p4" geom1="front_right_calf_upper_collision" geom2="tile_25" condim="1" friction="0.8"/>
+        <pair name="tile_25_p5" geom1="front_right_calf_lower_collision" geom2="tile_25" condim="1" friction="0.8"/>
+        <pair name="tile_25_p6" geom1="front_left_calf_upper_collision" geom2="tile_25" condim="1" friction="0.8"/>
+        <pair name="tile_25_p7" geom1="front_left_calf_lower_collision" geom2="tile_25" condim="1" friction="0.8"/>
+        <pair name="tile_25_p8" geom1="hind_right_calf_upper_collision" geom2="tile_25" condim="1" friction="0.8"/>
+        <pair name="tile_25_p9" geom1="hind_right_calf_lower_collision" geom2="tile_25" condim="1" friction="0.8"/>
+        <pair name="tile_25_p10" geom1="hind_left_calf_upper_collision" geom2="tile_25" condim="1" friction="0.8"/>
+        <pair name="tile_25_p11" geom1="hind_left_calf_lower_collision" geom2="tile_25" condim="1" friction="0.8"/>
+        <pair name="tile_26_p0" geom1="front_right_foot_collision" geom2="tile_26" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_26_p1" geom1="front_left_foot_collision" geom2="tile_26" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_26_p2" geom1="hind_right_foot_collision" geom2="tile_26" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_26_p3" geom1="hind_left_foot_collision" geom2="tile_26" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_26_p4" geom1="front_right_calf_upper_collision" geom2="tile_26" condim="1" friction="0.8"/>
+        <pair name="tile_26_p5" geom1="front_right_calf_lower_collision" geom2="tile_26" condim="1" friction="0.8"/>
+        <pair name="tile_26_p6" geom1="front_left_calf_upper_collision" geom2="tile_26" condim="1" friction="0.8"/>
+        <pair name="tile_26_p7" geom1="front_left_calf_lower_collision" geom2="tile_26" condim="1" friction="0.8"/>
+        <pair name="tile_26_p8" geom1="hind_right_calf_upper_collision" geom2="tile_26" condim="1" friction="0.8"/>
+        <pair name="tile_26_p9" geom1="hind_right_calf_lower_collision" geom2="tile_26" condim="1" friction="0.8"/>
+        <pair name="tile_26_p10" geom1="hind_left_calf_upper_collision" geom2="tile_26" condim="1" friction="0.8"/>
+        <pair name="tile_26_p11" geom1="hind_left_calf_lower_collision" geom2="tile_26" condim="1" friction="0.8"/>
+        <pair name="tile_27_p0" geom1="front_right_foot_collision" geom2="tile_27" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_27_p1" geom1="front_left_foot_collision" geom2="tile_27" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_27_p2" geom1="hind_right_foot_collision" geom2="tile_27" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_27_p3" geom1="hind_left_foot_collision" geom2="tile_27" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_27_p4" geom1="front_right_calf_upper_collision" geom2="tile_27" condim="1" friction="0.8"/>
+        <pair name="tile_27_p5" geom1="front_right_calf_lower_collision" geom2="tile_27" condim="1" friction="0.8"/>
+        <pair name="tile_27_p6" geom1="front_left_calf_upper_collision" geom2="tile_27" condim="1" friction="0.8"/>
+        <pair name="tile_27_p7" geom1="front_left_calf_lower_collision" geom2="tile_27" condim="1" friction="0.8"/>
+        <pair name="tile_27_p8" geom1="hind_right_calf_upper_collision" geom2="tile_27" condim="1" friction="0.8"/>
+        <pair name="tile_27_p9" geom1="hind_right_calf_lower_collision" geom2="tile_27" condim="1" friction="0.8"/>
+        <pair name="tile_27_p10" geom1="hind_left_calf_upper_collision" geom2="tile_27" condim="1" friction="0.8"/>
+        <pair name="tile_27_p11" geom1="hind_left_calf_lower_collision" geom2="tile_27" condim="1" friction="0.8"/>
+        <pair name="tile_28_p0" geom1="front_right_foot_collision" geom2="tile_28" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_28_p1" geom1="front_left_foot_collision" geom2="tile_28" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_28_p2" geom1="hind_right_foot_collision" geom2="tile_28" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_28_p3" geom1="hind_left_foot_collision" geom2="tile_28" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_28_p4" geom1="front_right_calf_upper_collision" geom2="tile_28" condim="1" friction="0.8"/>
+        <pair name="tile_28_p5" geom1="front_right_calf_lower_collision" geom2="tile_28" condim="1" friction="0.8"/>
+        <pair name="tile_28_p6" geom1="front_left_calf_upper_collision" geom2="tile_28" condim="1" friction="0.8"/>
+        <pair name="tile_28_p7" geom1="front_left_calf_lower_collision" geom2="tile_28" condim="1" friction="0.8"/>
+        <pair name="tile_28_p8" geom1="hind_right_calf_upper_collision" geom2="tile_28" condim="1" friction="0.8"/>
+        <pair name="tile_28_p9" geom1="hind_right_calf_lower_collision" geom2="tile_28" condim="1" friction="0.8"/>
+        <pair name="tile_28_p10" geom1="hind_left_calf_upper_collision" geom2="tile_28" condim="1" friction="0.8"/>
+        <pair name="tile_28_p11" geom1="hind_left_calf_lower_collision" geom2="tile_28" condim="1" friction="0.8"/>
+        <pair name="tile_29_p0" geom1="front_right_foot_collision" geom2="tile_29" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_29_p1" geom1="front_left_foot_collision" geom2="tile_29" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_29_p2" geom1="hind_right_foot_collision" geom2="tile_29" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_29_p3" geom1="hind_left_foot_collision" geom2="tile_29" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_29_p4" geom1="front_right_calf_upper_collision" geom2="tile_29" condim="1" friction="0.8"/>
+        <pair name="tile_29_p5" geom1="front_right_calf_lower_collision" geom2="tile_29" condim="1" friction="0.8"/>
+        <pair name="tile_29_p6" geom1="front_left_calf_upper_collision" geom2="tile_29" condim="1" friction="0.8"/>
+        <pair name="tile_29_p7" geom1="front_left_calf_lower_collision" geom2="tile_29" condim="1" friction="0.8"/>
+        <pair name="tile_29_p8" geom1="hind_right_calf_upper_collision" geom2="tile_29" condim="1" friction="0.8"/>
+        <pair name="tile_29_p9" geom1="hind_right_calf_lower_collision" geom2="tile_29" condim="1" friction="0.8"/>
+        <pair name="tile_29_p10" geom1="hind_left_calf_upper_collision" geom2="tile_29" condim="1" friction="0.8"/>
+        <pair name="tile_29_p11" geom1="hind_left_calf_lower_collision" geom2="tile_29" condim="1" friction="0.8"/>
+        <pair name="tile_30_p0" geom1="front_right_foot_collision" geom2="tile_30" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_30_p1" geom1="front_left_foot_collision" geom2="tile_30" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_30_p2" geom1="hind_right_foot_collision" geom2="tile_30" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_30_p3" geom1="hind_left_foot_collision" geom2="tile_30" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_30_p4" geom1="front_right_calf_upper_collision" geom2="tile_30" condim="1" friction="0.8"/>
+        <pair name="tile_30_p5" geom1="front_right_calf_lower_collision" geom2="tile_30" condim="1" friction="0.8"/>
+        <pair name="tile_30_p6" geom1="front_left_calf_upper_collision" geom2="tile_30" condim="1" friction="0.8"/>
+        <pair name="tile_30_p7" geom1="front_left_calf_lower_collision" geom2="tile_30" condim="1" friction="0.8"/>
+        <pair name="tile_30_p8" geom1="hind_right_calf_upper_collision" geom2="tile_30" condim="1" friction="0.8"/>
+        <pair name="tile_30_p9" geom1="hind_right_calf_lower_collision" geom2="tile_30" condim="1" friction="0.8"/>
+        <pair name="tile_30_p10" geom1="hind_left_calf_upper_collision" geom2="tile_30" condim="1" friction="0.8"/>
+        <pair name="tile_30_p11" geom1="hind_left_calf_lower_collision" geom2="tile_30" condim="1" friction="0.8"/>
+        <pair name="tile_31_p0" geom1="front_right_foot_collision" geom2="tile_31" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_31_p1" geom1="front_left_foot_collision" geom2="tile_31" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_31_p2" geom1="hind_right_foot_collision" geom2="tile_31" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_31_p3" geom1="hind_left_foot_collision" geom2="tile_31" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_31_p4" geom1="front_right_calf_upper_collision" geom2="tile_31" condim="1" friction="0.8"/>
+        <pair name="tile_31_p5" geom1="front_right_calf_lower_collision" geom2="tile_31" condim="1" friction="0.8"/>
+        <pair name="tile_31_p6" geom1="front_left_calf_upper_collision" geom2="tile_31" condim="1" friction="0.8"/>
+        <pair name="tile_31_p7" geom1="front_left_calf_lower_collision" geom2="tile_31" condim="1" friction="0.8"/>
+        <pair name="tile_31_p8" geom1="hind_right_calf_upper_collision" geom2="tile_31" condim="1" friction="0.8"/>
+        <pair name="tile_31_p9" geom1="hind_right_calf_lower_collision" geom2="tile_31" condim="1" friction="0.8"/>
+        <pair name="tile_31_p10" geom1="hind_left_calf_upper_collision" geom2="tile_31" condim="1" friction="0.8"/>
+        <pair name="tile_31_p11" geom1="hind_left_calf_lower_collision" geom2="tile_31" condim="1" friction="0.8"/>
+        <pair name="tile_32_p0" geom1="front_right_foot_collision" geom2="tile_32" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_32_p1" geom1="front_left_foot_collision" geom2="tile_32" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_32_p2" geom1="hind_right_foot_collision" geom2="tile_32" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_32_p3" geom1="hind_left_foot_collision" geom2="tile_32" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_32_p4" geom1="front_right_calf_upper_collision" geom2="tile_32" condim="1" friction="0.8"/>
+        <pair name="tile_32_p5" geom1="front_right_calf_lower_collision" geom2="tile_32" condim="1" friction="0.8"/>
+        <pair name="tile_32_p6" geom1="front_left_calf_upper_collision" geom2="tile_32" condim="1" friction="0.8"/>
+        <pair name="tile_32_p7" geom1="front_left_calf_lower_collision" geom2="tile_32" condim="1" friction="0.8"/>
+        <pair name="tile_32_p8" geom1="hind_right_calf_upper_collision" geom2="tile_32" condim="1" friction="0.8"/>
+        <pair name="tile_32_p9" geom1="hind_right_calf_lower_collision" geom2="tile_32" condim="1" friction="0.8"/>
+        <pair name="tile_32_p10" geom1="hind_left_calf_upper_collision" geom2="tile_32" condim="1" friction="0.8"/>
+        <pair name="tile_32_p11" geom1="hind_left_calf_lower_collision" geom2="tile_32" condim="1" friction="0.8"/>
+        <pair name="tile_33_p0" geom1="front_right_foot_collision" geom2="tile_33" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_33_p1" geom1="front_left_foot_collision" geom2="tile_33" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_33_p2" geom1="hind_right_foot_collision" geom2="tile_33" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_33_p3" geom1="hind_left_foot_collision" geom2="tile_33" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_33_p4" geom1="front_right_calf_upper_collision" geom2="tile_33" condim="1" friction="0.8"/>
+        <pair name="tile_33_p5" geom1="front_right_calf_lower_collision" geom2="tile_33" condim="1" friction="0.8"/>
+        <pair name="tile_33_p6" geom1="front_left_calf_upper_collision" geom2="tile_33" condim="1" friction="0.8"/>
+        <pair name="tile_33_p7" geom1="front_left_calf_lower_collision" geom2="tile_33" condim="1" friction="0.8"/>
+        <pair name="tile_33_p8" geom1="hind_right_calf_upper_collision" geom2="tile_33" condim="1" friction="0.8"/>
+        <pair name="tile_33_p9" geom1="hind_right_calf_lower_collision" geom2="tile_33" condim="1" friction="0.8"/>
+        <pair name="tile_33_p10" geom1="hind_left_calf_upper_collision" geom2="tile_33" condim="1" friction="0.8"/>
+        <pair name="tile_33_p11" geom1="hind_left_calf_lower_collision" geom2="tile_33" condim="1" friction="0.8"/>
+        <pair name="tile_34_p0" geom1="front_right_foot_collision" geom2="tile_34" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_34_p1" geom1="front_left_foot_collision" geom2="tile_34" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_34_p2" geom1="hind_right_foot_collision" geom2="tile_34" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_34_p3" geom1="hind_left_foot_collision" geom2="tile_34" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_34_p4" geom1="front_right_calf_upper_collision" geom2="tile_34" condim="1" friction="0.8"/>
+        <pair name="tile_34_p5" geom1="front_right_calf_lower_collision" geom2="tile_34" condim="1" friction="0.8"/>
+        <pair name="tile_34_p6" geom1="front_left_calf_upper_collision" geom2="tile_34" condim="1" friction="0.8"/>
+        <pair name="tile_34_p7" geom1="front_left_calf_lower_collision" geom2="tile_34" condim="1" friction="0.8"/>
+        <pair name="tile_34_p8" geom1="hind_right_calf_upper_collision" geom2="tile_34" condim="1" friction="0.8"/>
+        <pair name="tile_34_p9" geom1="hind_right_calf_lower_collision" geom2="tile_34" condim="1" friction="0.8"/>
+        <pair name="tile_34_p10" geom1="hind_left_calf_upper_collision" geom2="tile_34" condim="1" friction="0.8"/>
+        <pair name="tile_34_p11" geom1="hind_left_calf_lower_collision" geom2="tile_34" condim="1" friction="0.8"/>
+        <pair name="tile_35_p0" geom1="front_right_foot_collision" geom2="tile_35" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_35_p1" geom1="front_left_foot_collision" geom2="tile_35" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_35_p2" geom1="hind_right_foot_collision" geom2="tile_35" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_35_p3" geom1="hind_left_foot_collision" geom2="tile_35" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
+        <pair name="tile_35_p4" geom1="front_right_calf_upper_collision" geom2="tile_35" condim="1" friction="0.8"/>
+        <pair name="tile_35_p5" geom1="front_right_calf_lower_collision" geom2="tile_35" condim="1" friction="0.8"/>
+        <pair name="tile_35_p6" geom1="front_left_calf_upper_collision" geom2="tile_35" condim="1" friction="0.8"/>
+        <pair name="tile_35_p7" geom1="front_left_calf_lower_collision" geom2="tile_35" condim="1" friction="0.8"/>
+        <pair name="tile_35_p8" geom1="hind_right_calf_upper_collision" geom2="tile_35" condim="1" friction="0.8"/>
+        <pair name="tile_35_p9" geom1="hind_right_calf_lower_collision" geom2="tile_35" condim="1" friction="0.8"/>
+        <pair name="tile_35_p10" geom1="hind_left_calf_upper_collision" geom2="tile_35" condim="1" friction="0.8"/>
+        <pair name="tile_35_p11" geom1="hind_left_calf_lower_collision" geom2="tile_35" condim="1" friction="0.8"/>
+    </contact>
+    <include file="controllers/position_control.xml"/>
+    <include file="contacts/walking_task_contacts.xml"/>
+    <include file="sensors/foot_to_floor_force_sensor.xml"/>
+    <include file="sensors/torso_to_floor_collision_sensor.xml"/>
+    <include file="sensors/foot_to_floor_collision_sensor.xml"/>
+    <include file="sensors/front_calf_to_floor_collision_sensor.xml"/>
+    <include file="sensors/hind_calf_to_floor_collision_sensor.xml"/>
+</mujoco>
