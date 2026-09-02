@@ -9,10 +9,6 @@ authors = [
 requires-python = ">=3.14"
 dependencies = [
     "mjlab>=1.6.0",
-    # rsl-rl-lib 5.4.2 (pinned exactly by mjlab) calls
-    # wandb.Settings(start_method="thread"). wandb removed that field in
-    # 0.29.0, so its pydantic Settings model rejects it and training dies at
-    # logger init. mjlab only requires wandb>=0.22.3, leaving it unbounded.
     "wandb>=0.22.3,<0.29",
 ]
 
