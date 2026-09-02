@@ -23,7 +23,10 @@ from unitree_vision_rl.unitree_go2.unitree_go2 import (
   GO2_ACTION_SCALE,
   get_go2_robot_cfg,
 )
-
+#from mjlab.terrains.config import (
+#    flat, pyramid_stairs, pyramid_stairs_inv, hf_pyramid_slope,
+#    hf_pyramid_slope_inv, random_rough, wave_terrain,
+#)
 
 # Go2 naming
 BASE_BODY = "base_link"
@@ -32,8 +35,10 @@ LEGS = ("front_right", "front_left", "hind_right", "hind_left")
 SITE_NAMES = tuple(f"{leg}_foot" for leg in LEGS)
 FOOT_GEOMS = tuple(f"{leg}_foot_collision" for leg in LEGS)
 
-
+##################
 # rough env config
+##################
+
 def unitree_go2_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   cfg = make_velocity_env_cfg()   # full config to track velo commands
 
@@ -80,6 +85,7 @@ def unitree_go2_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
       pattern=r".*_collision$",
       # ...except the feet.
       exclude=FOOT_GEOMS,
+      #pattern=r"^(.*_torso|.*_hip|.*_thigh)_collision$",
     ),
     secondary=ContactMatch(mode="body", pattern="terrain"),
     fields=("found",),
@@ -93,6 +99,25 @@ def unitree_go2_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
 
   if cfg.scene.terrain is not None and cfg.scene.terrain.terrain_generator is not None:
     cfg.scene.terrain.terrain_generator.curriculum = True
+    # editing the specific proportions of the terrain generation
+    #tg = cfg.scene.terrain.terrain_generator
+    #tg.curriculum = True
+    #tg.sub_terrains = {
+    #    "flat": flat(proportion=0.1),
+    #    "pyramid_stairs": pyramid_stairs(
+    #        proportion=0.25, step_height_range=(0.0, 0.18), step_width=0.32
+    #    ),
+    #    "pyramid_stairs_inv": pyramid_stairs_inv(
+    #        proportion=0.25, step_height_range=(0.0, 0.18), step_width=0.32
+    #    ),
+    #    "hf_pyramid_slope": hf_pyramid_slope(proportion=0.1, slope_range=(0.0, 1.0)),
+    #    "hf_pyramid_slope_inv": hf_pyramid_slope_inv(
+    #        proportion=0.1, slope_range=(0.0, 1.0)
+    #    ),
+    #    "random_rough": random_rough(proportion=0.1, noise_range=(0.02, 0.16)),
+    #    "wave_terrain": wave_terrain(proportion=0.1, amplitude_range=(0.0, 0.3)),
+    #}
+    #cfg.scene.terrain.max_init_terrain_level = 3
 
   joint_pos_action = cfg.actions["joint_pos"]
   assert isinstance(joint_pos_action, JointPositionActionCfg)
@@ -105,6 +130,8 @@ def unitree_go2_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   cfg.events["foot_friction"].params["asset_cfg"].geom_names = FOOT_GEOMS
   cfg.events["base_com"].params["asset_cfg"].body_names = (BASE_BODY,)
 
+
+  # rewards
   cfg.rewards["pose"].params["std_standing"] = {
     r".*_(hip|thigh)_joint": 0.05,
     r".*_calf_joint": 0.1,
@@ -123,24 +150,32 @@ def unitree_go2_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   cfg.rewards["body_ang_vel"].params["asset_cfg"].body_names = (BASE_BODY,)
 
   for reward_name in ("foot_clearance", "foot_slip"):
+   # cfg.rewards["foot_clearance"].weight = -0.5
+   # cfg.rewards["foot_clearance"].params["target_height"] = 0.12
+   # cfg.rewards["foot_swing_height"].weight = -0.1
+   # cfg.rewards["foot_swing_height"].params["target_height"] = 0.12
+
     cfg.rewards[reward_name].params["asset_cfg"].site_names = SITE_NAMES
 
   cfg.rewards["body_ang_vel"].weight = 0.0
   cfg.rewards["angular_momentum"].weight = 0.0
   cfg.rewards["air_time"].weight = 0.0
 
+  # terminations
   cfg.terminations.pop("fell_over", None)
   cfg.terminations["illegal_contact"] = TerminationTermCfg(
     func=mdp.illegal_contact,
     params={"sensor_name": nonfoot_ground_cfg.name},
   )
 
+  # velocity commands
   cmd = cfg.commands["twist"]
   assert isinstance(cmd, UniformVelocityCommandCfg)
   cmd.viz.z_offset = 0.5
 
+  # play back
   if play:
-    # Effectively infinite episode length.
+    # infinite episode length for playing back
     cfg.episode_length_s = int(1e9)
 
     cfg.observations["actor"].enable_corruption = False
@@ -157,6 +192,10 @@ def unitree_go2_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
 
   return cfg
 
+
+##################
+# flat env config
+##################
 
 def unitree_go2_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   """Create Unitree Go2 flat terrain velocity configuration."""
