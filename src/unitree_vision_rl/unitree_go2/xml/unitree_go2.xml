@@ -1,10 +1,6 @@
 <mujoco model="go2">
 	<compiler angle="radian" meshdir="assets" autolimits="true"/>
 
-	<option iterations="1" ls_iterations="5" timestep="0.004" integrator="Euler">
-	    <flag eulerdamp="disable"/>
-	</option>
-
 	<default>
         <default class="go2">
             <geom friction="0.6" contype="0" conaffinity="0" type="mesh"/>
@@ -237,21 +233,15 @@
 		</body>
 	</worldbody>
 
-	<contact>
-        <pair name="right_front_foot_floor_contact" geom1="front_right_foot_collision" geom2="floor" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
-		<pair name="right_hind_foot_floor_contact" geom1="hind_right_foot_collision" geom2="floor" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
-		<pair name="left_front_foot_floor_contact" geom1="front_left_foot_collision" geom2="floor" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
-		<pair name="left_hind_foot_floor_contact" geom1="hind_left_foot_collision" geom2="floor" solref="0.01 1" solimp="0.9 .95 0.022" condim="3" friction="0.8 0.8 0.02 0.01 0.01"/>
-    </contact>
-
 	<sensor>
 		<!-- IMU: -->
-		<gyro name="imu_gyro" site="imu"/>
+		<gyro name="imu_ang_vel" site="imu"/>
 		<framequat name="imu_orientation" objtype="site" objname="imu"/>
-		<accelerometer name="imu_acceleration" site="imu"/>
+		<accelerometer name="imu_lin_acc" site="imu"/>
+		<subtreeangmom name="root_angmom" body="base_link"/>
 
 		<!-- State Estimator: -->
-		<velocimeter name="local_linear_velocity" site="imu"/>
+		<velocimeter name="imu_lin_vel" site="imu"/>
 		<framepos name="imu_position" objtype="site" objname="imu"/>
 		<framelinvel name="front_right_global_linear_velocity" objtype="site" objname="front_right_foot"/>
 		<framelinvel name="front_left_global_linear_velocity" objtype="site" objname="front_left_foot"/>
