@@ -72,7 +72,9 @@ class UnitreeGo2Env(mjx_env.MjxEnv):
         self.target_foot_height = reward_config.target_foot_height
         self.foot_clearance_velocity_scale = reward_config.foot_clearance_velocity_scale
         self.foot_clearance_sigma = reward_config.foot_clearance_sigma
+        self.target_body_height = reward_config.target_body_height
         reward_config_dict = flax.serialization.to_state_dict(reward_config)
+        del reward_config_dict['target_body_height']
         del reward_config_dict['kernel_sigma']
         del reward_config_dict['target_air_time']
         del reward_config_dict['mode_time']

@@ -28,6 +28,7 @@ from config.go2_config import (
     CommandConfig,
 )
 from environment.go2_env import UnitreeGo2Env
+from environment.terrain import make_terrain_randomizer, make_stair_randomizer
 
 # Change this to log runs under a different Weights & Biases project.
 WANDB_PROJECT = "unitree-go2-vision-rl"
@@ -80,10 +81,22 @@ def main():
     parser.add_argument("--scene", type=str, default=EnvironmentConfig.filename)
     parser.add_argument("--save-path", type=str, default=None)
     parser.add_argument("--notes", type=str, default="")
+    parser.add_argument("--max-top", type=float, default=0.20,
+                        help="Curriculum difficulty: max tile top height (box terrain).")
+    parser.add_argument("--restore-checkpoint", type=str, default=None,
+                        help="Prior stage's checkpoint dir to warm-start from.")
     args = parser.parse_args()
 
     save_path = args.save_path or f"policies/{datetime.now():%Y%m%d-%H%M%S}"
     Path(save_path).parent.mkdir(parents=True, exist_ok=True)
+
+    checkpoint_path = os.path.abspath(f"policies/checkpoints/{Path(save_path).name}")
+    
+    Path(checkpoint_path).parent.mkdir(parents=True, exist_ok=True)
+
+    restore_checkpoint_path = (
+        os.path.abspath(args.restore_checkpoint) if args.restore_checkpoint else None
+    )
 
     environment_config = EnvironmentConfig(filename=args.scene)
     reward_config = RewardConfig()
@@ -98,6 +111,24 @@ def main():
         disturbance_config=disturbance_config,
         command_config=command_config,
     )
+
+    num_tiles = sum(
+        1
+        for i in range(env.mj_model.ngeom)
+        if (env.mj_model.geom(i).name or '').startswith('tile_')
+    )
+    randomization_fn = None
+    if num_tiles > 0:
+        if "stairs" in args.scene:
+            randomization_fn = make_stair_randomizer(
+                env.mj_model, num_tiles, max_step=args.max_top
+            )
+            print(f'per-env stairs: {num_tiles} steps, max_step={args.max_top}')
+        else:
+            randomization_fn = make_terrain_randomizer(
+                env.mj_model, num_tiles, max_top=args.max_top
+            )
+            print(f'per-env terrain randomization: {num_tiles} tiles, max_top={args.max_top}')
 
     params = ppo_params(args.num_timesteps, args.num_envs)
 
@@ -128,12 +159,21 @@ def main():
             "env_config": _to_loggable(environment_config),
             "scene": args.scene,
             "save_path": save_path,
+            "max_top": args.max_top,
+            "restore_checkpoint": restore_checkpoint_path,
         },
     ) as run:
+        if restore_checkpoint_path:
+            print(f'warm-starting from checkpoint: {restore_checkpoint_path}')
+        print(f'saving checkpoints to: {checkpoint_path}')
         train_fn = functools.partial(
             ppo.train,
             **params,
             network_factory=network_factory,
+            randomization_fn=randomization_fn,
+            save_checkpoint_path=checkpoint_path,
+            restore_checkpoint_path=restore_checkpoint_path,
+            restore_value_fn=True,
             progress_fn=make_progress_fn(run),
             seed=0,
         )
