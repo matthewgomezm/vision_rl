@@ -18,15 +18,14 @@ from mjlab.tasks.velocity import mdp
 from mjlab.tasks.velocity.mdp import UniformVelocityCommandCfg
 from mjlab.tasks.velocity.velocity_env_cfg import make_velocity_env_cfg
 
+from unitree_vision_rl.terrain_cfgs import medium_terrains_cfg, hard_terrains_cfg
+
 from unitree_vision_rl.unitree_go2.unitree_go2 import (
   FULL_COLLISION,
   GO2_ACTION_SCALE,
   get_go2_robot_cfg,
 )
-#from mjlab.terrains.config import (
-#    flat, pyramid_stairs, pyramid_stairs_inv, hf_pyramid_slope,
-#    hf_pyramid_slope_inv, random_rough, wave_terrain,
-#)
+
 
 # Go2 naming
 BASE_BODY = "base_link"
@@ -38,7 +37,6 @@ FOOT_GEOMS = tuple(f"{leg}_foot_collision" for leg in LEGS)
 ##################
 # rough env config
 ##################
-
 def unitree_go2_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   cfg = make_velocity_env_cfg()   # full config to track velo commands
 
@@ -99,25 +97,7 @@ def unitree_go2_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
 
   if cfg.scene.terrain is not None and cfg.scene.terrain.terrain_generator is not None:
     cfg.scene.terrain.terrain_generator.curriculum = True
-    # editing the specific proportions of the terrain generation
-    #tg = cfg.scene.terrain.terrain_generator
-    #tg.curriculum = True
-    #tg.sub_terrains = {
-    #    "flat": flat(proportion=0.1),
-    #    "pyramid_stairs": pyramid_stairs(
-    #        proportion=0.25, step_height_range=(0.0, 0.18), step_width=0.32
-    #    ),
-    #    "pyramid_stairs_inv": pyramid_stairs_inv(
-    #        proportion=0.25, step_height_range=(0.0, 0.18), step_width=0.32
-    #    ),
-    #    "hf_pyramid_slope": hf_pyramid_slope(proportion=0.1, slope_range=(0.0, 1.0)),
-    #    "hf_pyramid_slope_inv": hf_pyramid_slope_inv(
-    #        proportion=0.1, slope_range=(0.0, 1.0)
-    #    ),
-    #    "random_rough": random_rough(proportion=0.1, noise_range=(0.02, 0.16)),
-    #    "wave_terrain": wave_terrain(proportion=0.1, amplitude_range=(0.0, 0.3)),
-    #}
-    #cfg.scene.terrain.max_init_terrain_level = 3
+
 
   joint_pos_action = cfg.actions["joint_pos"]
   assert isinstance(joint_pos_action, JointPositionActionCfg)
@@ -162,7 +142,10 @@ def unitree_go2_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   cfg.rewards["air_time"].weight = 0.0
 
   # terminations
-  cfg.terminations.pop("fell_over", None)
+  cfg.terminations["fell_over"] = TerminationTermCfg(
+    func=mdp.bad_orientation,
+    params={"limit_angle": math.radians(70.0)},
+  )
   cfg.terminations["illegal_contact"] = TerminationTermCfg(
     func=mdp.illegal_contact,
     params={"sensor_name": nonfoot_ground_cfg.name},
@@ -189,6 +172,9 @@ def unitree_go2_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
         cfg.scene.terrain.terrain_generator.num_cols = 5
         cfg.scene.terrain.terrain_generator.num_rows = 5
         cfg.scene.terrain.terrain_generator.border_width = 10.0
+        
+        # adding same seed when playing back to test perception vs blind
+        # cfg.scene.terrain.terrain_generator.seed = 40
 
   return cfg
 
@@ -196,7 +182,6 @@ def unitree_go2_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
 ##################
 # flat env config
 ##################
-
 def unitree_go2_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   """Create Unitree Go2 flat terrain velocity configuration."""
   cfg = unitree_go2_rough_env_cfg(play=play)
@@ -234,5 +219,65 @@ def unitree_go2_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
     assert isinstance(twist_cmd, UniformVelocityCommandCfg)
     twist_cmd.ranges.lin_vel_x = (-1.5, 2.0)
     twist_cmd.ranges.ang_vel_z = (-0.7, 0.7)
+
+  return cfg
+
+
+#######################
+# rough blind env config
+#######################
+def unitree_go2_rough_blind_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
+  cfg = unitree_go2_rough_env_cfg(play=play)
+
+  del cfg.observations["actor"].terms["height_scan"]
+  del cfg.observations["critic"].terms["height_scan"]
+
+  if play:
+    cfg.sim.nconmax = None
+
+    # adding same seed when playing back to test perception vs blind
+    # cfg.scene.terrain.terrain_generator.seed = 40
+
+  return cfg
+
+
+
+#######################
+# medium rough env config
+#######################
+def unitree_go2_rough_medium_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
+  cfg = unitree_go2_rough_env_cfg(play=play)
+
+  # Assigning a fresh generator discards the play-mode mutations the rough
+  # config applied to the previous object, so re-apply them here.
+  cfg.scene.terrain.terrain_generator = medium_terrains_cfg()
+
+  if play:
+    tg = cfg.scene.terrain.terrain_generator
+    tg.curriculum = False
+    tg.num_cols = 5
+    tg.num_rows = 5
+    tg.border_width = 10.0
+    cfg.sim.nconmax = None
+
+  return cfg
+
+
+
+#######################
+# hard rough env config
+#######################
+def unitree_go2_rough_hard_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
+  cfg = unitree_go2_rough_env_cfg(play=play)
+
+  cfg.scene.terrain.terrain_generator = hard_terrains_cfg()
+
+  if play:
+    tg = cfg.scene.terrain.terrain_generator
+    tg.curriculum = False
+    tg.num_cols = 5
+    tg.num_rows = 5
+    tg.border_width = 10.0
+    cfg.sim.nconmax = None
 
   return cfg
