@@ -1,6 +1,7 @@
 """Unitree Go2 velocity environment configurations."""
 
 import math
+from dataclasses import replace
 
 from mjlab.envs import ManagerBasedRlEnvCfg
 from mjlab.envs.mdp.actions import JointPositionActionCfg
@@ -16,9 +17,10 @@ from mjlab.sensor import (
 )
 from mjlab.tasks.velocity import mdp
 from mjlab.tasks.velocity.mdp import UniformVelocityCommandCfg
-from mjlab.tasks.velocity.velocity_env_cfg import make_velocity_env_cfg
+from unitree_vision_rl.unitree_go2.tasks import create_velocity_env_cfg
 
 from unitree_vision_rl.terrain_cfgs import medium_terrains_cfg, hard_terrains_cfg
+from mjlab.terrains.config import ALL_TERRAINS_CFG, open_stairs, random_stairs
 
 from unitree_vision_rl.unitree_go2.unitree_go2 import (
   FULL_COLLISION,
@@ -38,7 +40,7 @@ FOOT_GEOMS = tuple(f"{leg}_foot_collision" for leg in LEGS)
 # rough env config
 ##################
 def unitree_go2_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
-  cfg = make_velocity_env_cfg()   # full config to track velo commands
+  cfg = create_velocity_env_cfg()   # full config to track velo commands
 
   cfg.sim.mujoco.ccd_iterations = 500
   cfg.sim.contact_sensor_maxmatch = 500
@@ -80,10 +82,10 @@ def unitree_go2_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
       mode="geom",
       entity="robot",
       # All collision geoms...
-      pattern=r".*_collision$",
+      #pattern=r".*_collision$",
       # ...except the feet.
       exclude=FOOT_GEOMS,
-      #pattern=r"^(.*_torso|.*_hip|.*_thigh)_collision$",
+      pattern=r"^(.*_torso|.*_hip|.*_thigh)_collision$",
     ),
     secondary=ContactMatch(mode="body", pattern="terrain"),
     fields=("found",),
@@ -248,8 +250,6 @@ def unitree_go2_rough_blind_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
 def unitree_go2_rough_medium_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   cfg = unitree_go2_rough_env_cfg(play=play)
 
-  # Assigning a fresh generator discards the play-mode mutations the rough
-  # config applied to the previous object, so re-apply them here.
   cfg.scene.terrain.terrain_generator = medium_terrains_cfg()
 
   if play:
@@ -263,6 +263,43 @@ def unitree_go2_rough_medium_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg
   return cfg
 
 
+def unitree_go2_rough_medium_2_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
+  cfg = unitree_go2_rough_env_cfg(play=play)
+
+  cfg.scene.terrain.terrain_generator = medium_terrains_cfg()
+
+  cfg.scene.terrain.terrain_generator.sub_terrains["open_stairs"] = open_stairs(
+    proportion=0.20,
+    step_height_range=(0.04,0.2),
+    step_width_range=(0.82,0.37),
+    platform_width=1.9,
+    border_width=0.25,
+    step_thickness=0.05
+  )
+  
+  cfg.scene.terrain.terrain_generator.sub_terrains["open_stairs_inv"] = open_stairs(
+    proportion=0.20,
+    step_height_range=(0.04,0.2),
+    step_width_range=(0.82,0.37),
+    platform_width=1.9,
+    border_width=0.25,
+    step_thickness=0.05,
+    inverted = True
+)
+  
+  cfg.scene.terrain.terrain_generator.sub_terrains.pop("pyramid_stairs_inv")
+
+
+  if play:
+    tg = cfg.scene.terrain.terrain_generator
+    tg.curriculum = False
+    tg.num_cols = 5
+    tg.num_rows = 5
+    tg.border_width = 10.0
+    cfg.sim.nconmax = None
+
+  return cfg
+
 
 #######################
 # hard rough env config
@@ -271,6 +308,24 @@ def unitree_go2_rough_hard_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   cfg = unitree_go2_rough_env_cfg(play=play)
 
   cfg.scene.terrain.terrain_generator = hard_terrains_cfg()
+
+  if play:
+    tg = cfg.scene.terrain.terrain_generator
+    tg.curriculum = False
+    tg.num_cols = 5
+    tg.num_rows = 5
+    tg.border_width = 10.0
+    cfg.sim.nconmax = None
+
+  return cfg
+
+#######################
+# all terrains testing
+#######################
+def unitree_go2_all_terrain_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
+  cfg = unitree_go2_rough_env_cfg(play=play)
+
+  cfg.scene.terrain.terrain_generator = ALL_TERRAINS_CFG
 
   if play:
     tg = cfg.scene.terrain.terrain_generator
